@@ -15,39 +15,34 @@
         ::-webkit-scrollbar-thumb:hover { background: #555555bb; }
         ::-webkit-scrollbar-track { background: transparent; }
 
-        /* === CREATIVE DARK MODE PALETTE & EFFECTS === */
+        /* === ENHANCED DARK MODE WITH HIGH CONTRAST === */
         .dark body {
-            background-color: #0f172a; /* slate-900 */
-            background-image: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); /* slate-900 to slate-800 */
+            background-color: #020617; /* slate-950 */
+            background-image: linear-gradient(180deg, #0f172a 0%, #020617 100%); /* slate-900 to slate-950 */
+            color: #e2e8f0; /* slate-200 */
         }
         .dark .glass-card, .dark .glass-section {
-            background: rgba(30, 41, 59, 0.5); /* slate-800 with opacity */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(30, 41, 59, 0.6); /* slate-800 with opacity */
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
         .dark .glass-card:hover {
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
         }
-        .dark header {
-            background: rgba(15, 23, 42, 0.6); /* slate-900 with opacity */
-        }
-        /* Dark mode form elements */
-        .dark select, .dark input, .dark textarea {
-            background-color: rgba(51, 65, 85, 0.5); /* slate-700 with opacity */
-            border-color: #475569; /* slate-600 */
-        }
-        .dark select:focus, .dark input:focus, .dark textarea:focus {
-             border-color: #3b82f6; /* blue-500 */
-             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
-        }
+        .dark header { background: rgba(15, 23, 42, 0.6); }
+        .dark h1, .dark h2, .dark h3 { color: #f8fafc; } /* slate-50 */
+        .dark p, .dark label, .dark span:not([class*="priority-"]) { color: #cbd5e1; } /* slate-300 */
+        .dark .text-xs { color: #94a3b8; } /* slate-400 */
+        .dark select, .dark input, .dark textarea { background-color: rgba(30, 41, 59, 0.7); border-color: #475569; color: #e2e8f0; }
+        .dark select:focus, .dark input:focus, .dark textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4); }
+        .dark .chat-bubble-model { background-color: #1e293b; color: #e2e8f0; } /* slate-800 */
+        .dark .tag-more { color: #e2e8f0; }
 
         /* === LIGHT MODE STYLES === */
         .glass-card, .glass-section {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
         
         /* === MISC & UI POLISH === */
@@ -55,214 +50,199 @@
         .col-disagreed { background-image: linear-gradient(to top, rgba(239, 68, 68, 0.1), transparent); }
         .col-on-hold { background-image: linear-gradient(to top, rgba(245, 158, 11, 0.1), transparent); }
         .col-unneeded { background-image: linear-gradient(to top, rgba(107, 114, 128, 0.1), transparent); }
-        .dragging { opacity: 0.5; transform: rotate(2deg); }
-        .drag-over { border: 2px dashed #3b82f6; }
-        .priority-critical { background-color: #ef4444; color: white; }
-        .priority-high { background-color: #f97316; color: white; }
-        .priority-medium { background-color: #eab308; color: white; }
-        .priority-low { background-color: #22c55e; color: white; }
+        .dragging { opacity: 0.5; transform: rotate(2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.3); cursor: grabbing; }
+        .drag-over { border-style: dashed; }
+        .priority-critical { background-color: #ef4444; color: white; } .priority-high { background-color: #f97316; color: white; }
+        .priority-medium { background-color: #eab308; color: white; } .priority-low { background-color: #22c55e; color: white; }
         .chat-bubble { max-width: 80%; width: fit-content; }
         .chat-bubble-user { background-color: #3b82f6; color: white; border-radius: 1rem 1rem 0 1rem; margin-left: auto;}
         .chat-bubble-model { background-color: #e5e7eb; color: #1f2937; border-radius: 1rem 1rem 1rem 0; }
-        .dark .chat-bubble-model { background-color: #374151; color: #e5e7eb; }
+        .card-actions { opacity: 0; transition: opacity 0.2s ease-in-out; }
+        .glass-card:hover .card-actions { opacity: 1; }
+
     </style>
 </head>
 
-<body class="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300 min-h-screen">
+<body class="bg-gray-100 dark:bg-slate-950 font-sans transition-colors duration-300 min-h-screen">
 
-    <!-- === HEADER === -->
-    <header class="p-4 bg-white/30 dark:bg-slate-900/60 backdrop-filter backdrop-blur-lg -webkit-backdrop-filter: blur(10px) border-b border-gray-200/50 dark:border-slate-700/50 sticky top-0 z-10">
+    <header class="p-4 bg-white/30 dark:bg-slate-900/60 backdrop-filter backdrop-blur-lg sticky top-0 z-20 border-b border-black/5 dark:border-white/10">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Local Requirements Board</h1>
+            <h1 class="text-2xl font-bold">Local Requirements Board</h1>
             
             <div id="project-controls" class="flex items-center gap-2 flex-wrap">
-                <select id="project-selector" class="bg-white dark:bg-slate-800/50 border-gray-300 dark:border-slate-600 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select>
+                <select id="project-selector" class="bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select>
                 <button id="new-project-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-2 rounded-md text-sm inline-flex items-center transition-transform transform hover:scale-105" title="New Project"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg></button>
-                <button id="import-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-3 py-2 rounded-md text-sm inline-flex items-center transition-transform transform hover:scale-105" title="Import from JSON"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg></button>
+                <button id="delete-project-btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-2 rounded-md text-sm inline-flex items-center transition-transform transform hover:scale-105" title="Delete Current Project"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                 <div class="flex rounded-md shadow-sm">
-                     <button id="export-json-btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-l-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105" title="Export to JSON">JSON</button>
-                     <button id="export-txt-btn" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded-r-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105 border-l border-purple-400" title="Export to TXT">TXT</button>
+                    <button id="import-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-l-md text-sm inline-flex items-center gap-2" title="Import File"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg></button>
+                    <button id="export-all-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-2 rounded-r-md text-sm inline-flex items-center gap-2 border-l border-indigo-400" title="Export All Projects"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg></button>
                 </div>
-                <button id="gemini-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-slate-700" title="Toggle AI Assistant"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></button>
-                <button id="theme-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-slate-700" title="Toggle Theme">
-                    <svg id="theme-icon-light" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                </button>
+                <div class="flex rounded-md shadow-sm">
+                     <button id="export-json-btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-l-md text-sm" title="Export Current Project to JSON">JSON</button>
+                     <button id="export-txt-btn" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded-r-md text-sm border-l border-purple-400" title="Export Current Project to TXT">TXT</button>
+                </div>
+                <button id="chat-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-slate-700" title="Toggle Chat"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></button>
+                <button id="theme-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-slate-700" title="Toggle Theme"><svg id="theme-icon-light" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button>
             </div>
             
             <div id="filter-controls" class="w-full flex items-center gap-4 flex-wrap mt-4">
-                 <input type="search" id="search-input" placeholder="Search title, owner, tags..." class="flex-grow bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                 <select id="filter-priority" class="bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    <option value="">All Priorities</option> <option value="Critical">Critical</option> <option value="High">High</option> <option value="Medium">Medium</option> <option value="Low">Low</option>
-                </select>
-                <select id="sort-by" class="bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    <option value="">Sort By</option> <option value="priority">Priority</option> <option value="dueDate">Due Date</option>
-                </select>
+                 <input type="search" id="search-input" placeholder="Search title, owner, tags..." class="flex-grow bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"><select id="filter-priority" class="bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"><option value="">All Priorities</option> <option value="Critical">Critical</option> <option value="High">High</option> <option value="Medium">Medium</option> <option value="Low">Low</option></select><select id="sort-by" class="bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"><option value="">Sort By</option> <option value="priority">Priority</option> <option value="dueDate">Due Date</option></select>
             </div>
         </div>
     </header>
 
-    <!-- === MAIN BOARD === -->
-    <main id="board" class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Columns will be injected here -->
-    </main>
+    <main id="board" class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></main>
     
-    <!-- === GEMINI ASSISTANT SECTION === -->
-    <section id="gemini-chat-section" class="max-w-7xl mx-auto p-4 mt-6 hidden">
+    <section id="chat-section" class="max-w-7xl mx-auto p-4 mt-6 hidden">
         <div class="glass-section p-6 rounded-xl">
-            <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Gemini Assistant</h2>
-            <div id="gemini-api-key-container" class="mb-4">
-                 <label for="gemini-api-key" class="block text-sm font-medium mb-1">Your Google AI Gemini API Key</label>
-                 <div class="flex gap-2"> <input type="password" id="gemini-api-key" placeholder="Enter key to enable assistant" class="flex-grow rounded-md border-gray-300"> <button id="save-api-key-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save</button> </div>
-                 <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Key is stored only in your browser's localStorage.</p>
+            <h2 class="text-2xl font-bold mb-4">Chat</h2>
+            <div id="api-key-container" class="mb-4">
+                 <label for="api-key-input" class="block text-sm font-medium mb-1">Your Google AI API Key</label>
+                 <div class="flex gap-2"> <input type="password" id="api-key-input" placeholder="Enter key to enable chat" class="flex-grow rounded-md border-gray-300"> <button id="save-api-key-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save</button> </div>
+                 <p class="text-xs mt-1">Key is stored only in your browser's localStorage.</p>
             </div>
-            
             <div id="chat-ui-container" class="hidden">
-                 <div id="chat-container" class="h-64 overflow-y-auto bg-black/10 dark:bg-black/20 rounded-lg p-4 mb-4 flex flex-col gap-4">
-                     <div class="chat-bubble chat-bubble-model">Hello! Describe requirements and I'll create them as cards with smart tags in the 'Agreed' column.</div>
-                 </div>
-                <form id="gemini-form" class="flex gap-2 items-start">
-                    <textarea id="gemini-input" rows="1" placeholder="Press Enter to send..." class="flex-grow rounded-md border-gray-300 resize-none p-2"></textarea>
-                    <button type="submit" id="gemini-submit-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold p-3 rounded-md disabled:bg-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
+                 <div id="chat-container" class="h-64 overflow-y-auto bg-black/10 dark:bg-black/20 rounded-lg p-4 mb-4 flex flex-col gap-4"><div class="chat-bubble chat-bubble-model">Hello! Describe requirements and I'll create them as cards with smart tags in the 'Agreed' column.</div></div>
+                <form id="chat-form" class="flex gap-2 items-start">
+                    <textarea id="chat-input" rows="1" placeholder="Press Enter to send..." class="flex-grow rounded-md border-gray-300 resize-none p-2"></textarea>
+                    <button type="submit" id="chat-submit-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold p-3 rounded-md disabled:bg-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- === NO PROJECT STATE === -->
     <div id="no-project-state" class="hidden text-center p-20">
         <h2 class="text-2xl font-semibold mb-4">No projects found.</h2>
-        <p class="mb-6 text-gray-600 dark:text-slate-400">Get started by creating your first project.</p>
+        <p class="mb-6">Get started by creating your first project.</p>
         <button id="create-first-project-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg">Create First Project</button>
     </div>
 
-    <!-- === MODAL & OTHER UI === -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-70 hidden z-40"></div>
     <div id="card-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass-card rounded-xl p-8 w-11/12 max-w-2xl shadow-2xl hidden z-50 transition-transform transform scale-95">
-        <!-- Modal content is the same as before -->
-        <form id="card-form" class="space-y-4"><h2 id="modal-title" class="text-2xl font-bold mb-6"></h2> <input type="hidden" id="card-id"> <input type="hidden" id="card-column"> <div> <label for="card-title" class="block text-sm font-medium mb-1">Title <span class="text-red-500">*</span></label> <input type="text" id="card-title" required class="w-full rounded-md border-gray-300"> </div><div> <label for="card-description" class="block text-sm font-medium mb-1">Description</label> <textarea id="card-description" rows="3" class="w-full rounded-md border-gray-300"></textarea> </div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div> <label for="card-priority" class="block text-sm font-medium mb-1">Priority</label> <select id="card-priority" class="w-full rounded-md border-gray-300"> <option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option> </select> </div><div> <label for="card-due-date" class="block text-sm font-medium mb-1">Due Date</label> <input type="date" id="card-due-date" class="w-full rounded-md border-gray-300"> </div></div><div> <label for="card-owner" class="block text-sm font-medium mb-1">Owner</label> <input type="text" id="card-owner" class="w-full rounded-md border-gray-300"> </div><div> <label for="card-tags" class="block text-sm font-medium mb-1">Tags (comma-separated)</label> <input type="text" id="card-tags" placeholder="e.g. UI, API, Database" class="w-full rounded-md border-gray-300"> </div><div class="flex justify-end gap-4 mt-8"> <button type="button" id="delete-card-btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md hidden">Delete</button> <button type="button" id="cancel-btn" class="bg-gray-300 hover:bg-gray-400 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-800 dark:text-gray-200 font-semibold px-4 py-2 rounded-md">Cancel</button> <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save</button> </div></form> <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> </button>
+        <form id="card-form" class="space-y-4"><h2 id="modal-title" class="text-2xl font-bold mb-6"></h2> <input type="hidden" id="card-id"> <input type="hidden" id="card-column"> <div> <label for="card-title" class="block text-sm font-medium mb-1">Title <span class="text-red-500">*</span></label> <input type="text" id="card-title" required class="w-full rounded-md border-gray-300"> </div><div> <label for="card-description" class="block text-sm font-medium mb-1">Description</label> <textarea id="card-description" rows="3" class="w-full rounded-md border-gray-300"></textarea> </div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div> <label for="card-priority" class="block text-sm font-medium mb-1">Priority</label> <select id="card-priority" class="w-full rounded-md border-gray-300"> <option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option> </select> </div><div> <label for="card-due-date" class="block text-sm font-medium mb-1">Due Date</label> <input type="date" id="card-due-date" class="w-full rounded-md border-gray-300"> </div></div><div> <label for="card-owner" class="block text-sm font-medium mb-1">Owner</label> <input type="text" id="card-owner" class="w-full rounded-md border-gray-300"> </div><div> <label for="card-tags" class="block text-sm font-medium mb-1">Tags (comma-separated)</label> <input type="text" id="card-tags" placeholder="e.g. UI, API, Database" class="w-full rounded-md border-gray-300"> </div><div class="flex justify-end gap-4 mt-8"> <button type="button" id="delete-card-btn-modal" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md hidden">Delete</button> <button type="button" id="cancel-btn" class="bg-gray-300 hover:bg-gray-400 dark:bg-slate-600 dark:hover:bg-slate-500 font-semibold px-4 py-2 rounded-md">Cancel</button> <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save</button> </div></form> <button id="close-modal-btn" class="absolute top-4 right-4"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> </button>
     </div>
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
     <input type="file" id="import-file-input" class="hidden" accept=".json">
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-
-    const $ = (selector) => document.querySelector(selector);
-    const $$ = (selector) => document.querySelectorAll(selector);
-
-    // DOM ELEMENT REFERENCES
-    const board = $('#board'), projectSelector = $('#project-selector'), themeToggleBtn = $('#theme-toggle-btn'), 
-        noProjectState = $('#no-project-state'), createFirstProjectBtn = $('#create-first-project-btn'),
-        modalBackdrop = $('#modal-backdrop'), cardModal = $('#card-modal'), cardForm = $('#card-form'), 
-        geminiChatSection = $('#gemini-chat-section'), geminiToggleBtn = $('#gemini-toggle-btn'), 
-        geminiApiKeyInput = $('#gemini-api-key'), saveApiKeyBtn = $('#save-api-key-btn'), 
-        geminiForm = $('#gemini-form'), geminiInput = $('#gemini-input'), chatContainer = $('#chat-container'),
-        geminiApiKeyContainer = $('#gemini-api-key-container'), chatUiContainer = $('#chat-ui-container'),
-        searchInput = $('#search-input'), filterPrioritySelect = $('#filter-priority'), sortBySelect = $('#sort-by'),
-        importBtn = $('#import-btn'), importFileInput = $('#import-file-input'),
-        exportJsonBtn = $('#export-json-btn'), exportTxtBtn = $('#export-txt-btn');
+    // === CONFIG & REFERENCES ===
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
     
-    // APPLICATION STATE
-    let appData = { projects: [], activeProjectId: null, theme: 'light', geminiApiKey: null, geminiChatVisible: false };
-    let debounceTimer;
+    // Core Elements
+    const board = $('#board'), projectSelector = $('#project-selector'), noProjectState = $('#no-project-state');
+    // Modal Elements
+    const modalBackdrop = $('#modal-backdrop'), cardModal = $('#card-modal'), cardForm = $('#card-form');
+    // Import/Export
+    const importFileInput = $('#import-file-input'), importBtn = $('#import-btn'), exportAllBtn = $('#export-all-btn');
+    // Project Buttons
+    const deleteProjectBtn = $('#delete-project-btn'), newProjectBtn = $('#new-project-btn'), createFirstProjectBtn = $('#create-first-project-btn');
+    // Chat Elements
+    const chatSection = $('#chat-section'), chatToggleBtn = $('#chat-toggle-btn'), apiKeyInput = $('#api-key-input'), 
+          apiKeyContainer = $('#api-key-container'), chatUiContainer = $('#chat-ui-container'), 
+          chatForm = $('#chat-form'), chatInput = $('#chat-input'), saveApiKeyBtn = $('#save-api-key-btn');
 
+    let appData = { projects: [], activeProjectId: null, theme: 'light', apiKey: null, chatVisible: false };
+    let draggedItem = null;
+    
     const columnConfig = { agreed: { title: "Agreed Requirements", color: "green" }, disagreed: { title: "Disagreed Requirements", color: "red" }, onHold: { title: "On-Hold Requirements", color: "amber" }, unneeded: { title: "Unneeded Requirements", color: "gray" },};
-    const priorityOrder = { "Critical": 4, "High": 3, "Medium": 2, "Low": 1 };
+    const priorityOrder = { Critical: 4, High: 3, Medium: 2, Low: 1 };
     
-    // === DATA & STATE MANAGEMENT ===
+    // === DATA MANAGEMENT ===
     const generateUUID = () => crypto.randomUUID();
-    const loadData = () => { try { const data = JSON.parse(localStorage.getItem('requirementsBoardData')); if(data) appData = { ...appData, ...data };} catch (e) { console.error("Could not load data", e); } geminiApiKeyInput.value = appData.geminiApiKey || ''; applyTheme(); updateGeminiUI(); };
-    const saveData = () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { localStorage.setItem('requirementsBoardData', JSON.stringify(appData)); }, 500); };
+    const saveData = () => { try { localStorage.setItem('requirementsBoardData', JSON.stringify(appData)); } catch(e) { console.error("Error saving data:", e); showToast("Could not save data. Storage may be full.", "error"); }};
+    const loadData = () => { try { const data = JSON.parse(localStorage.getItem('requirementsBoardData')); if(data) appData = { ...appData, ...data };} catch (e) { console.error("Could not load data", e); }};
     const getActiveProject = () => appData.projects.find(p => p.id === appData.activeProjectId);
-
-    // === MAIN RENDER FUNCTIONS ===
+    
+    // === CORE RENDERING ===
     const renderApp = () => {
         const hasProjects = appData.projects.length > 0;
-        $$('#project-selector, #filter-controls, #export-json-btn, #export-txt-btn').forEach(el => el.style.display = hasProjects ? '' : 'none');
+        $$('#project-selector, #filter-controls, #export-json-btn, #export-txt-btn, #export-all-btn, #delete-project-btn').forEach(el => { el.style.display = hasProjects ? '' : 'none'; });
         board.classList.toggle('hidden', !hasProjects); noProjectState.classList.toggle('hidden', hasProjects);
         if (hasProjects) { populateProjectSelector(); renderBoard(); } 
-        updateGeminiUI(); // This also handles showing/hiding the section
+        updateChatUI();
     };
-    
+
     const renderBoard = () => {
         board.innerHTML = '';
         const project = getActiveProject();
-
-        if (!project) { if(appData.projects.length>0){ appData.activeProjectId = appData.projects[0].id; saveData(); renderBoard(); } return; }
+        if (!project) { if (appData.projects.length > 0) { appData.activeProjectId = appData.projects[0].id; saveData(); renderBoard(); } return; }
 
         Object.entries(columnConfig).forEach(([columnId, columnMeta]) => {
             const columnEl = document.createElement('section');
-            columnEl.id = columnId; columnEl.className = `board-column col-${columnId} p-4 rounded-xl bg-white/30 dark:bg-slate-800/50 flex flex-col`; columnEl.dataset.columnId = columnId;
+            columnEl.id = columnId; columnEl.className = `board-column col-${columnId} p-4 rounded-xl bg-white/30 dark:bg-slate-800/50 flex flex-col border-2 border-transparent`; columnEl.dataset.columnId = columnId;
             const cards = getFilteredAndSortedCards(project.columns[columnId] || []);
-            columnEl.innerHTML = `<h2 class="text-lg font-bold mb-4 text-${columnMeta.color}-700 dark:text-${columnMeta.color}-300 flex items-center justify-between"><span>${columnMeta.title}</span><span class="text-sm font-normal bg-${columnMeta.color}-200 dark:bg-${columnMeta.color}-800/50 px-2 py-1 rounded-full">${cards.length}</span></h2><div class="card-container flex-grow space-y-4 overflow-y-auto pr-2 min-h-[200px]"></div><div class="inline-add-form-container mt-2"></div><button class="add-card-btn mt-4 w-full bg-white/40 dark:bg-slate-700/50 hover:bg-white/60 dark:hover:bg-slate-700 font-semibold p-2 rounded-md transition-all flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Add Card</button>`;
+            columnEl.innerHTML = `<h2 class="text-lg font-bold mb-4 text-${columnMeta.color}-700 dark:text-${columnMeta.color}-300 flex items-center justify-between"><span>${columnMeta.title}</span><span class="text-sm font-normal bg-${columnMeta.color}-200 dark:bg-${columnMeta.color}-900/80 px-2 py-1 rounded-full">${cards.length}</span></h2><div class="card-container flex-grow space-y-4 overflow-y-auto pr-2 min-h-[200px]"></div><div class="inline-add-form-container mt-2"></div><button class="add-card-btn mt-4 w-full bg-white/40 dark:bg-slate-700/50 hover:bg-white/60 dark:hover:bg-slate-700 font-semibold p-2 rounded-md transition-all flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Add Card</button>`;
             const cardContainer = columnEl.querySelector('.card-container');
-            if(cards.length === 0) cardContainer.innerHTML = '<p class="text-sm text-slate-500 dark:text-slate-400 text-center mt-8">No cards here.</p>';
-            else cards.forEach(card => cardContainer.appendChild(createCardElement(card, columnId)));
-            
-            // Unconditional Footer
-            const footer = document.createElement('div'); footer.className = 'text-center text-xs text-slate-500 dark:text-slate-400 p-2 mt-4 border-t border-slate-300/50 dark:border-slate-700/50 font-semibold'; footer.textContent = columnMeta.title;
-            columnEl.appendChild(footer);
+            if(cards.length === 0) cardContainer.innerHTML = '<p class="text-sm text-center mt-8">No cards here.</p>';
+            else cards.forEach(card => cardContainer.appendChild(createCardElement(card)));
 
+            const footer = document.createElement('div'); footer.className = 'text-center text-xs p-2 mt-auto border-t border-slate-300/50 dark:border-slate-700/50 font-semibold'; footer.textContent = columnMeta.title; columnEl.appendChild(footer);
             board.appendChild(columnEl);
         });
         setupDragAndDrop();
     };
     
-    const getFilteredAndSortedCards=(cards)=>{let c=cards.filter(card=>{const s=searchInput.value.toLowerCase(),p=filterPrioritySelect.value;return(s===''||card.title.toLowerCase().includes(s)||(card.description||'').toLowerCase().includes(s)||(card.owner||'').toLowerCase().includes(s)||(card.tags||[]).some(t=>t.toLowerCase().includes(s)))&&(p===''||card.priority===p)});if(sortBySelect.value==='priority')c.sort((a,b)=>priorityOrder[b.priority]-priorityOrder[a.priority]);else if(sortBySelect.value==='dueDate')c.sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));return c};
-    const createCardElement=(card,columnId)=>{const e=document.createElement('div');e.className='glass-card p-4 rounded-lg shadow-md cursor-pointer hover:shadow-xl transition-all duration-200';e.draggable=true;e.dataset.cardId=card.id;e.dataset.columnId=columnId;const t=(card.tags||[]).map(g=>`<span class="bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-blue-100 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${g}</span>`).join('');e.innerHTML=`<div class="flex justify-between items-start"><h3 class="font-bold text-md mb-2 pr-2 text-gray-900 dark:text-white">${card.title}</h3><span class="priority-${card.priority.toLowerCase()} text-xs font-bold px-2 py-1 rounded-md whitespace-nowrap">${card.priority}</span></div><p class="text-sm text-slate-600 dark:text-slate-300 mb-3 break-words">${card.description||''}</p><div class="text-xs text-slate-500 dark:text-slate-400 space-y-1">${card.owner?`<p><strong>Owner:</strong> ${card.owner}</p>`:''}${card.dueDate?`<p><strong>Due:</strong> ${card.dueDate}</p>`:''}</div>${t?`<div class="mt-3">${t}</div>`:''}<div class="flex justify-end mt-2"> <button class="edit-card-btn p-1 text-slate-500 hover:text-blue-500"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z"></path></svg> </button> </div>`;e.querySelector('.edit-card-btn').addEventListener('click',ev=>{ev.stopPropagation();openModal(card.id,columnId)});return e};
+    const createCardElement = (card) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'glass-card p-4 rounded-lg shadow-md cursor-grab relative'; cardEl.draggable = true; cardEl.dataset.cardId = card.id;
+        
+        // Tag overflow logic
+        let tagsHtml = '';
+        if (card.tags && card.tags.length > 0) {
+            const tagsToShow = card.tags.slice(0, 3); const hiddenTagsCount = card.tags.length - 3;
+            tagsHtml = tagsToShow.map(tag => `<span class="bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-blue-100 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${tag}</span>`).join('');
+            if (hiddenTagsCount > 0) { tagsHtml += `<span class="text-xs ml-1 tag-more">+${hiddenTagsCount} more</span>`; }
+        }
 
-    // === UI INTERACTIONS & FEATURES ===
-    const showInlineAddForm=(columnId,container)=>{container.innerHTML=`<div class="p-2 glass-card rounded-md"><textarea class="w-full bg-white/50 dark:bg-slate-700/50 rounded-md border-gray-300 dark:border-slate-600 p-2 text-sm" placeholder="Title... (Ctrl+Enter to save)"></textarea><div class="flex justify-end gap-2 mt-2"><button class="cancel-inline-add px-3 py-1 text-xs rounded-md bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500">Cancel</button><button class="save-inline-add px-3 py-1 text-xs rounded-md bg-blue-500 hover:bg-blue-600 text-white">Add</button></div></div>`;container.querySelector('textarea').focus()};
-    const populateProjectSelector=()=>{projectSelector.innerHTML=appData.projects.map(p=>`<option value="${p.id}" ${p.id===appData.activeProjectId?'selected':''}>${p.name}</option>`).join('')};
-    const createNewProject=()=>{const p=prompt("Enter the new project name:");if(p&&p.trim()){const n=new Date().toISOString(),i=generateUUID();appData.projects.push({id:i,name:p.trim(),createdAt:n,updatedAt:n,columns:{agreed:[],disagreed:[],onHold:[],unneeded:[]}});appData.activeProjectId=i;saveData();renderApp();showToast(`Project "${p}" created!`,'success')}else if(p!==null)showToast('Project name cannot be empty.','error')};
+        cardEl.innerHTML = `<div class="flex justify-between items-start"><h3 class="font-bold text-md mb-2 pr-2">${card.title}</h3><span class="priority-${card.priority.toLowerCase()} text-xs font-bold px-2 py-1 rounded-md whitespace-nowrap">${card.priority}</span></div><p class="mb-3 break-words text-sm">${card.description||''}</p><div class="text-xs space-y-1">${card.owner?`<p><strong>Owner:</strong> ${card.owner}</p>`:''}${card.dueDate?`<p><strong>Due:</strong> ${card.dueDate}</p>`:''}</div>${tagsHtml?`<div class="mt-3 flex items-center flex-wrap">${tagsHtml}</div>`:''}<div class="card-actions absolute bottom-2 right-2 flex gap-1"><button class="edit-card-btn p-1.5 bg-white/50 dark:bg-slate-700/50 rounded-md hover:bg-blue-100 dark:hover:bg-slate-600 hover:text-blue-500 dark:hover:text-blue-300 transition-colors" title="Edit Card"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z"></path></svg></button><button class="delete-card-btn p-1.5 bg-white/50 dark:bg-slate-700/50 rounded-md hover:bg-red-100 dark:hover:bg-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-colors" title="Delete Card"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`;
+        return cardEl;
+    };
     
-    // DRAG & DROP + MODAL
-    function setupDragAndDrop(){$$('[draggable="true"]').forEach(c=>{c.addEventListener('dragstart',e=>e.target.classList.add('dragging'));c.addEventListener('dragend',e=>e.target.classList.remove('dragging'))});$$('.card-container').forEach(c=>{c.addEventListener('dragover',e=>{e.preventDefault();c.parentElement.classList.add('drag-over')});c.addEventListener('dragleave',e=>c.parentElement.classList.remove('drag-over'));c.addEventListener('drop',e=>{e.preventDefault();c.parentElement.classList.remove('drag-over');const d=$('.dragging');if(!d)return;const t=c.parentElement.dataset.columnId,s=d.dataset.columnId,i=d.dataset.cardId;if(t===s)return;const p=getActiveProject();const n=p.columns[s].findIndex(c=>c.id===i);const[m]=p.columns[s].splice(n,1);(p.columns[t]=p.columns[t]||[]).push(m);p.updatedAt=new Date().toISOString();saveData();renderBoard();showToast(`Card moved.`,'info')})})};
-    const openModal=(c=null,d=null)=>{cardForm.reset();$('#card-id').value=c||'';$('#card-column').value=d||'';$('#delete-card-btn').classList.toggle('hidden',!c);if(c){$('#modal-title').textContent='Edit Requirement';const a=getActiveProject().columns[d].find(e=>e.id===c);$('#card-title').value=a.title;$('#card-description').value=a.description;$('#card-priority').value=a.priority;$('#card-due-date').value=a.dueDate;$('#card-owner').value=a.owner;$('#card-tags').value=(a.tags||[]).join(', ')}else{$('#modal-title').textContent=`Add to ${columnConfig[d].title}`}modalBackdrop.classList.remove('hidden');cardModal.classList.remove('hidden');setTimeout(()=>cardModal.classList.remove('scale-95'),10)};
-    const closeModal=()=>{cardModal.classList.add('scale-95');setTimeout(()=>{modalBackdrop.classList.add('hidden');cardModal.classList.add('hidden')},200)};
+    // === PROJECT & CARD MANAGEMENT ===
+    const createNewProject = () => { const n = prompt("Enter the new project name:"); if(n&&n.trim()){const t=new Date().toISOString(), i=generateUUID(); appData.projects.push({id:i, name: n.trim(), createdAt: t, updatedAt:t, columns: {agreed:[], disagreed:[], onHold:[], unneeded:[]}}); appData.activeProjectId=i; saveData(); renderApp(); showToast(`Project "${n}" created!`, "success");} else if(n!==null)showToast("Project name cannot be empty.", "error");};
+    const deleteCurrentProject = () => { const p = getActiveProject(); if(!p)return; if(confirm(`Are you sure you want to permanently delete project "${p.name}"? This cannot be undone.`)){ appData.projects=appData.projects.filter(proj=>proj.id!==p.id); appData.activeProjectId = appData.projects.length>0 ? appData.projects[0].id : null; saveData(); renderApp(); showToast(`Project "${p.name}" deleted.`, "info");}};
+    const populateProjectSelector=()=>{ projectSelector.innerHTML=appData.projects.map(p=>`<option value="${p.id}" ${p.id===appData.activeProjectId?'selected':''}>${p.name}</option>`).join(''); };
+    
+    // === DRAG & DROP ===
+    function setupDragAndDrop() { $$('.glass-card[draggable="true"]').forEach(c => { c.addEventListener('dragstart', e => { draggedItem = e.target; setTimeout(()=>e.target.classList.add('dragging'), 0);}); c.addEventListener('dragend', ()=>draggedItem.classList.remove('dragging'));}); $$('.board-column').forEach(c => { c.addEventListener('dragover', e => { e.preventDefault(); if (c !== draggedItem?.closest('.board-column')) c.classList.add('drag-over');}); c.addEventListener('dragleave', ()=>c.classList.remove('drag-over')); c.addEventListener('drop', e => { e.preventDefault(); c.classList.remove('drag-over'); if(!draggedItem)return; const cardId=draggedItem.dataset.cardId, sourceColId=draggedItem.closest('.board-column').dataset.columnId, targetColId=c.dataset.columnId; if(sourceColId===targetColId)return; const proj=getActiveProject(), i=proj.columns[sourceColId].findIndex(c=>c.id===cardId), [card] = proj.columns[sourceColId].splice(i,1); (proj.columns[targetColId]=proj.columns[targetColId]||[]).push(card); proj.updatedAt=new Date().toISOString(); saveData(); renderBoard(); showToast('Card moved.', 'info'); }); });}
 
-    // GEMINI ASSISTANT
-    const updateGeminiUI=()=>{const p=appData.projects.length>0;geminiChatSection.classList.toggle('hidden',!appData.geminiChatVisible||!p);const k=!!appData.geminiApiKey;geminiApiKeyContainer.classList.toggle('hidden',k);chatUiContainer.classList.toggle('hidden',!k);if(k){$('#gemini-submit-btn').disabled=false;geminiInput.placeholder="Press Enter to send..."}};
-    const addChatMessage=(m,s)=>{const b=document.createElement('div');b.className=`chat-bubble p-3 rounded-lg chat-bubble-${s} text-sm`;b.textContent=m;chatContainer.appendChild(b);chatContainer.scrollTop=chatContainer.scrollHeight};
-    const handleGeminiSubmit=async(e)=>{e.preventDefault();const i=geminiInput.value.trim();if(!i)return;addChatMessage(i,'user');geminiInput.value='';$('#gemini-submit-btn').disabled=true;const p=`You are a requirements assistant. Analyze the user's text and extract actionable requirements. For each requirement, generate a JSON object with 'title', 'description', 'priority' (Low, Medium, High, or Critical), and 'tags' (an array of 1-3 relevant string keywords). Return a raw JSON array of these objects without any markdown, comments, or explanations.`;try{const r=await fetch(`${GEMINI_API_URL}?key=${appData.geminiApiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:`${p}\n\nUser text: "${i}"`}]}]})});if(!r.ok)throw new Error(`API error: ${r.statusText}`);const d=await r.json();const t=d.candidates[0].content.parts[0].text.replace(/```json/g,'').replace(/```/g,'').trim();const q=JSON.parse(t);const o=getActiveProject();let a=0;const n=new Date().toISOString();(Array.isArray(q)?q:[q]).forEach(req=>{if(req.title){o.columns.agreed.push({id:generateUUID(),title:req.title,description:req.description||'',priority:['Low','Medium','High','Critical'].includes(req.priority)?req.priority:'Medium',tags:Array.isArray(req.tags)?req.tags:[],dueDate:'',owner:'',links:[],createdAt:n,updatedAt:n});a++}});if(a>0){addChatMessage(`I've added ${a} requirement(s) to the "Agreed" column.`, 'model');o.updatedAt=n;saveData();showToast(`${a} cards created by AI`,'success');renderBoard()}else{addChatMessage("I couldn't find any actionable requirements.","model")}}catch(error){addChatMessage(`Sorry, I couldn't process that: ${error.message}`,'model');showToast('Gemini API request failed.','error')}finally{$('#gemini-submit-btn').disabled=false}};
-    
-    // UI UTILITIES
-    const applyTheme=()=>{document.documentElement.className=appData.theme;$('#theme-icon-light').classList.toggle('hidden',appData.theme==='dark');$('#theme-icon-dark').classList.toggle('hidden',appData.theme!=='dark')};
-    const showToast=(m,t='info')=>{const e=document.createElement('div'),c={info:'bg-blue-500',success:'bg-green-500',error:'bg-red-500'};e.className=`text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300 transform translate-x-full ${c[t]}`;e.textContent=m;$('#toast-container').appendChild(e);setTimeout(()=>e.classList.remove('translate-x-full'),100);setTimeout(()=>{e.classList.add('opacity-0');e.addEventListener('transitionend',()=>e.remove())},3000)};
-    const downloadFile=(c,f,t)=>{const u='data:'+t+';charset=utf-8,'+encodeURIComponent(c),a=document.createElement('a');a.href=u;a.download=f;a.click()};
-    
-    // EVENT LISTENERS
-    $('#new-project-btn').addEventListener('click',createNewProject);createFirstProjectBtn.addEventListener('click',createNewProject);
-    projectSelector.addEventListener('change',e=>{appData.activeProjectId=e.target.value;saveData();renderBoard()});
-    searchInput.addEventListener('input',()=>{clearTimeout(debounceTimer);debounceTimer=setTimeout(renderBoard,300)});
-    filterPrioritySelect.addEventListener('change',renderBoard);sortBySelect.addEventListener('change',renderBoard);
-    board.addEventListener('click',e=>{const b=e.target.closest('.add-card-btn');if(b){const c=b.closest('.board-column');showInlineAddForm(c.dataset.columnId,c.querySelector('.inline-add-form-container'));b.style.display='none'}});
-    board.addEventListener('click',e=>{if(e.target.matches('.save-inline-add')){const c=e.target.closest('.inline-add-form-container');const t=c.querySelector('textarea').value.trim();const d=e.target.closest('.board-column').dataset.columnId;if(t){const n=new Date().toISOString();const o={id:generateUUID(),title:t,description:'',priority:'Medium',dueDate:'',owner:'',tags:[],links:[],createdAt:n,updatedAt:n};getActiveProject().columns[d].push(o);getActiveProject().updatedAt=n;saveData();showToast('Card added!','success');renderBoard()}}});
-    board.addEventListener('click',e=>{if(e.target.matches('.cancel-inline-add'))renderBoard()});
-    board.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey&&e.target.matches('.inline-add-form-container textarea')){const c=e.target.closest('.inline-add-form-container').querySelector('.save-inline-add');if(c)c.click()}});
-    
-    $$('#close-modal-btn,#cancel-btn,#modal-backdrop').forEach(b=>b.addEventListener('click',closeModal));
-    cardForm.addEventListener('submit',e=>{e.preventDefault();const i=$('#card-id').value,c=$('#card-column').value,n=new Date().toISOString();const d={id:i||generateUUID(),title:$('#card-title').value.trim(),description:$('#card-description').value.trim(),priority:$('#card-priority').value,dueDate:$('#card-due-date').value,owner:$('#card-owner').value.trim(),tags:$('#card-tags').value.split(',').map(t=>t.trim()).filter(Boolean),updatedAt:n};const p=getActiveProject();if(i){const x=p.columns[c].findIndex(e=>e.id===i);p.columns[c][x]={...p.columns[c][x],...d};showToast('Card updated!','success')}else{d.createdAt=n;p.columns[c].push(d);showToast('Card added!','success')}p.updatedAt=n;saveData();renderBoard();closeModal()});
-    $('#delete-card-btn').addEventListener('click',()=>{if(!confirm('Are you sure?'))return;const i=$('#card-id').value,c=$('#card-column').value,p=getActiveProject();p.columns[c]=p.columns[c].filter(e=>e.id!==i);p.updatedAt=new Date().toISOString();saveData();renderBoard();closeModal();showToast('Card deleted.','info')});
-    
-    themeToggleBtn.addEventListener('click',()=>{appData.theme=appData.theme==='dark'?'light':'dark';applyTheme();saveData()});
-    geminiToggleBtn.addEventListener('click',()=>{appData.geminiChatVisible=!appData.geminiChatVisible;updateGeminiUI();saveData()});
-    saveApiKeyBtn.addEventListener('click',()=>{appData.geminiApiKey=geminiApiKeyInput.value;saveData();updateGeminiUI();if(appData.geminiApiKey)showToast('API Key saved!','success')});
-    geminiForm.addEventListener('submit',handleGeminiSubmit);
-    geminiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();geminiForm.requestSubmit()}});
-    geminiInput.addEventListener('input',()=>{geminiInput.style.height='auto';geminiInput.style.height=`${geminiInput.scrollHeight}px`});
-    
-    // ** RESTORED IMPORT/EXPORT **
-    exportJsonBtn.addEventListener('click',()=>{const p=getActiveProject();if(!p){showToast('No project selected.','error');return}downloadFile(JSON.stringify(p,null,2),`${p.name.replace(/\s+/g,'_')}.json`,'application/json')});
-    exportTxtBtn.addEventListener('click',()=>{const p=getActiveProject();if(!p){showToast('No project selected.','error');return}let c=`Project: ${p.name}\nExported: ${new Date().toLocaleString()}\n========================\n\n`;Object.entries(p.columns).forEach(([id,cards])=>{c+=`--- ${columnConfig[id].title.toUpperCase()} (${cards.length}) ---\n\n`;if(cards.length===0)c+="No cards.\n\n";else cards.forEach(card=>{c+=`[${card.priority}] ${card.title}\n`;if(card.owner)c+=`  Owner: ${card.owner}\n`;if(card.dueDate)c+=`  Due: ${card.dueDate}\n`;if(card.tags&&card.tags.length>0)c+=`  Tags: ${card.tags.join(', ')}\n`;c+='---\n'});c+='\n'});downloadFile(c,`${p.name.replace(/\s+/g,'_')}_report.txt`,'text/plain')});
-    importBtn.addEventListener('click',()=>importFileInput.click());
-    importFileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(!d.id||!d.name||!d.columns)throw new Error("Invalid file format.");const x=appData.projects.findIndex(p=>p.id===d.id);if(x!==-1){if(confirm(`Project "${d.name}" exists. Overwrite?`)){appData.projects[x]=d}else{d.id=generateUUID();d.name=`${d.name} (Imported)`;appData.projects.push(d)}}else{appData.projects.push(d)}appData.activeProjectId=d.id;saveData();renderApp();showToast('Project imported!','success')}catch(err){showToast(`Import failed: ${err.message}`,'error')}finally{importFileInput.value=''}};r.readAsText(f)});
+    // === CHAT / AI ===
+    const updateChatUI=()=>{const p=appData.projects.length>0;chatSection.classList.toggle('hidden', !appData.chatVisible||!p); const k=!!appData.apiKey;apiKeyContainer.classList.toggle('hidden', k); chatUiContainer.classList.toggle('hidden',!k); apiKeyInput.value = appData.apiKey || ''; if(k) $('#chat-submit-btn').disabled=false;};
+    const addChatMessage=(m,s)=>{const b=document.createElement('div'); b.className=`chat-bubble p-3 rounded-lg chat-bubble-${s} text-sm`; b.textContent=m; $('#chat-container').appendChild(b); $('#chat-container').scrollTop=$('#chat-container').scrollHeight;};
+    const handleChatSubmit=async e=>{e.preventDefault(); const i=$('#chat-input').value.trim(); if(!i)return; addChatMessage(i, 'user'); $('#chat-input').value=''; $('#chat-submit-btn').disabled=true; const p=`You are a requirements assistant. Analyze the user's text and extract actionable requirements. For each requirement, generate a JSON object with 'title', 'description', 'priority' (Low, Medium, High, or Critical), and 'tags' (an array of 1-3 relevant string keywords). Return a raw JSON array of these objects without any markdown, comments, or explanations.`; try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${appData.apiKey}`, {method:'POST',headers:{'Content-Type':'application/json'}, body:JSON.stringify({contents:[{parts:[{text:`${p}\n\nUser text: "${i}"`}]}]})}); if(!r.ok)throw new Error(`API error: ${r.statusText} - Check API key and billing.`); const d=await r.json(); const t=d.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g,'').trim(); const q=JSON.parse(t); const o=getActiveProject();let a=0; const n=new Date().toISOString(); (Array.isArray(q)?q:[q]).forEach(req=>{if(req.title){o.columns.agreed.push({id:generateUUID(), title:req.title, description:req.description||'', priority:['Low','Medium','High','Critical'].includes(req.priority)?req.priority:'Medium', tags:Array.isArray(req.tags)?req.tags:[], dueDate:'', owner:'', links:[], createdAt:n, updatedAt:n});a++}}); if(a>0){addChatMessage(`I've added ${a} requirement(s).`, 'model'); o.updatedAt=n; saveData(); showToast(`${a} cards created by AI`, 'success'); renderBoard();}else{addChatMessage("I couldn't find any actionable requirements.", 'model');}}catch(err){addChatMessage(`Sorry, I couldn't process that: ${err.message}`, 'model'); showToast('Chat API request failed.', 'error');}finally{$('#chat-submit-btn').disabled=false}};
 
-    // INITIALIZATION
+    // === UI & EVENT LISTENERS ===
+    const getFilteredAndSortedCards = (cards) => { let c = cards.filter(card => { const s = $('#search-input').value.toLowerCase(), p = $('#filter-priority').value; return (s===''||card.title.toLowerCase().includes(s)||(card.description||'').toLowerCase().includes(s)||(card.owner||'').toLowerCase().includes(s)||(card.tags||[]).some(t=>t.toLowerCase().includes(s))) && (p===''||card.priority===p) }); if ($('#sort-by').value === 'priority') c.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]); else if ($('#sort-by').value === 'dueDate') c.sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate)); return c; };
+    const showToast=(m,t="info")=>{const e=document.createElement("div"),c={info:"bg-blue-500",success:"bg-green-500",error:"bg-red-500"};e.className=`text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300 transform translate-x-full ${c[t]}`,e.textContent=m,$("#toast-container").appendChild(e),setTimeout(()=>e.classList.remove("translate-x-full"),100),setTimeout(()=>{e.classList.add("opacity-0"),e.addEventListener("transitionend",()=>e.remove())},3e3)};
+    const downloadFile=(c,f,t)=>{const u='data:'+t+';charset=utf-8,'+encodeURIComponent(c), a=document.createElement('a'); a.href=u; a.download=f; a.click()};
+    const applyTheme=()=>{document.documentElement.className=appData.theme; $('#theme-icon-light').classList.toggle('hidden',appData.theme==='dark');$('#theme-icon-dark').classList.toggle('hidden',appData.theme!=='dark')};
+    const showInlineAddForm=(c,t)=>{t.innerHTML=`<div class="p-2 glass-card rounded-md"><textarea class="w-full bg-white/50 dark:bg-slate-700/50 rounded-md border-gray-300 dark:border-slate-600 p-2 text-sm" placeholder="Title... (Ctrl+Enter to save)"></textarea><div class="flex justify-end gap-2 mt-2"><button class="cancel-inline-add px-3 py-1 text-xs rounded-md bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500">Cancel</button><button class="save-inline-add px-3 py-1 text-xs rounded-md bg-blue-500 hover:bg-blue-600 text-white">Add</button></div></div>`;t.querySelector('textarea').focus();};
+    const openModal=(c,t)=>{cardForm.reset();$('#card-id').value=c;$('#card-column').value=t;$('#delete-card-btn-modal').classList.toggle('hidden',!c);if(c){$('#modal-title').textContent='Edit Requirement';const a=getActiveProject().columns[t].find(card=>card.id===c);$('#card-title').value=a.title;$('#card-description').value=a.description;$('#card-priority').value=a.priority;$('#card-due-date').value=a.dueDate;$('#card-owner').value=a.owner;$('#card-tags').value=(a.tags||[]).join(', ');}else{$('#modal-title').textContent=`Add to ${columnConfig[t].title}`}modalBackdrop.classList.remove('hidden');cardModal.classList.remove('hidden');setTimeout(()=>cardModal.classList.remove('scale-95'),10);};
+    const closeModal=()=>{cardModal.classList.add('scale-95');setTimeout(()=>{modalBackdrop.classList.add('hidden');cardModal.classList.add('hidden')},200);};
+
+    // Listeners Setup
+    newProjectBtn.addEventListener('click', createNewProject); createFirstProjectBtn.addEventListener('click', createNewProject); deleteProjectBtn.addEventListener('click', deleteCurrentProject);
+    projectSelector.addEventListener('change', e=>{ appData.activeProjectId=e.target.value; saveData(); renderApp();});
+    $('#search-input').addEventListener('input', ()=>setTimeout(renderBoard,300)); $('#filter-priority').addEventListener('change', renderBoard); $('#sort-by').addEventListener('change', renderBoard);
+    board.addEventListener('click', e=>{ if(e.target.closest('.add-card-btn')){ const c = e.target.closest('.board-column'); showInlineAddForm(c.dataset.columnId, c.querySelector('.inline-add-form-container')); e.target.closest('.add-card-btn').style.display='none'; } else if (e.target.matches('.save-inline-add')) { const t=e.target.closest('.inline-add-form-container').querySelector('textarea').value.trim(),c=e.target.closest('.board-column').dataset.columnId;if(t){const n=new Date().toISOString();getActiveProject().columns[c].push({id:generateUUID(),title:t,description:'',priority:'Medium',dueDate:'',owner:'',tags:[],createdAt:n,updatedAt:n});getActiveProject().updatedAt=n;saveData();showToast('Card added!','success');renderBoard();}} else if (e.target.matches('.cancel-inline-add')) { renderBoard(); } else if (e.target.closest('.edit-card-btn')) { const card = e.target.closest('.glass-card'); openModal(card.dataset.cardId, card.closest('.board-column').dataset.columnId); } else if (e.target.closest('.delete-card-btn') && confirm('Delete this card?')){const card=e.target.closest('.glass-card'), i=card.dataset.cardId,c=card.closest('.board-column').dataset.columnId,p=getActiveProject(); p.columns[c]=p.columns[c].filter(card=>card.id!==i); p.updatedAt=new Date().toISOString(); saveData(); renderBoard(); showToast('Card deleted.', 'info');}});
+    board.addEventListener('keydown', e=>{if(e.key==='Enter' && (e.ctrlKey||e.metaKey) && e.target.matches('.inline-add-form-container textarea')){ const s = e.target.closest('.inline-add-form-container').querySelector('.save-inline-add'); if(s) s.click(); }});
+    $$('#close-modal-btn,#cancel-btn,#modal-backdrop').forEach(b=>b.addEventListener('click', closeModal));
+    cardForm.addEventListener('submit', e=>{ e.preventDefault(); const i=$('#card-id').value, c=$('#card-column').value, n=new Date().toISOString(),d={id:i||generateUUID(), title:$('#card-title').value.trim(), description:$('#card-description').value.trim(), priority:$('#card-priority').value, dueDate:$('#card-due-date').value, owner:$('#card-owner').value.trim(), tags:$('#card-tags').value.split(',').map(t=>t.trim()).filter(Boolean), updatedAt:n}; const p=getActiveProject(); if(i){const x=p.columns[c].findIndex(c=>c.id===i); p.columns[c][x]={...p.columns[c][x], ...d};showToast('Card updated!', 'success');} else {d.createdAt=n; p.columns[c].push(d);showToast('Card added!','success');} p.updatedAt=n;saveData();renderBoard();closeModal();});
+    $('#theme-toggle-btn').addEventListener('click',()=>{appData.theme=appData.theme==='dark'?'light':'dark';applyTheme();saveData()});
+    chatToggleBtn.addEventListener('click', ()=>{appData.chatVisible=!appData.chatVisible;updateChatUI();saveData()});
+    saveApiKeyBtn.addEventListener('click', ()=>{appData.apiKey=apiKeyInput.value.trim();saveData();updateChatUI(); if(appData.apiKey)showToast('API Key saved!', 'success');});
+    chatForm.addEventListener('submit', handleChatSubmit); chatInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();chatForm.requestSubmit();}});
+    exportAllBtn.addEventListener('click',()=>{if(!appData.projects||appData.projects.length===0)return showToast('No projects to export.','error');downloadFile(JSON.stringify(appData,null,2),`requirements_board_backup_${new Date().toISOString().slice(0,10)}.json`,'application/json')});
+    importBtn.addEventListener('click', ()=>importFileInput.click());
+    importFileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);let p=[];if(d.projects&&Array.isArray(d.projects)){p=d.projects;appData.theme=d.theme||appData.theme;appData.apiKey=d.apiKey||appData.apiKey;}else if(d.id&&d.columns){p.push(d);}else{throw new Error("Unrecognized file format.")}let i=0,u=0;p.forEach(proj=>{const x=appData.projects.findIndex(p=>p.id===proj.id);if(x!==-1){if(confirm(`Project "${proj.name}" exists. Overwrite?`)){appData.projects[x]=proj;u++;}}else{appData.projects.push(proj);i++;}});if(p.length>0&&(!getActiveProject() || !appData.projects.some(proj=>proj.id===appData.activeProjectId)))appData.activeProjectId=p[p.length-1].id;saveData();renderApp();showToast(`Import: ${i} new, ${u} updated.`,'success')}catch(err){showToast(`Import failed: ${err.message}`,'error')}finally{importFileInput.value=''}};r.readAsText(f)});
+    $('#export-json-btn').addEventListener('click',()=>{const p=getActiveProject();if(!p)return showToast('No project selected.','error');downloadFile(JSON.stringify(p,null,2),`${p.name.replace(/\s+/g,'_')}.json`,'application/json')});
+    $('#export-txt-btn').addEventListener('click',()=>{const p=getActiveProject();if(!p)return showToast('No project selected.','error');let c=`Project: ${p.name}\nExported: ${new Date().toLocaleString()}\n========================\n\n`;Object.entries(p.columns).forEach(([id,cards])=>{c+=`--- ${columnConfig[id].title.toUpperCase()} (${(cards||[]).length}) ---\n\n`;if((cards||[]).length===0)c+="No cards.\n\n";else cards.forEach(card=>{c+=`[${card.priority}] ${card.title}\n`;if(card.owner)c+=`  Owner: ${card.owner}\n`;if(card.dueDate)c+=`  Due: ${card.dueDate}\n`;if(card.tags&&card.tags.length>0)c+=`  Tags: ${card.tags.join(', ')}\n`;c+='---\n'});c+='\n'});downloadFile(c,`${p.name.replace(/\s+/g,'_')}_report.txt`,'text/plain')});
+    
+    // === INITIALIZATION ===
     loadData();
+    applyTheme();
     renderApp();
 });
 </script>
