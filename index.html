@@ -9,95 +9,94 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* Custom scrollbar for a cleaner look */
+        /* === BASE STYLES & SCROLLBAR === */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-thumb { background: #88888888; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #555555bb; }
         ::-webkit-scrollbar-track { background: transparent; }
 
-        /* Glassmorphism card effect */
+        /* === CREATIVE DARK MODE PALETTE & EFFECTS === */
+        .dark body {
+            background-color: #0f172a; /* slate-900 */
+            background-image: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); /* slate-900 to slate-800 */
+        }
+        .dark .glass-card, .dark .glass-section {
+            background: rgba(30, 41, 59, 0.5); /* slate-800 with opacity */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .dark .glass-card:hover {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .dark header {
+            background: rgba(15, 23, 42, 0.6); /* slate-900 with opacity */
+        }
+        /* Dark mode form elements */
+        .dark select, .dark input, .dark textarea {
+            background-color: rgba(51, 65, 85, 0.5); /* slate-700 with opacity */
+            border-color: #475569; /* slate-600 */
+        }
+        .dark select:focus, .dark input:focus, .dark textarea:focus {
+             border-color: #3b82f6; /* blue-500 */
+             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+        }
+
+        /* === LIGHT MODE STYLES === */
         .glass-card, .glass-section {
             background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        /* Dark mode adjustments for glassmorphism */
-        .dark .glass-card, .dark .glass-section {
-            background: rgba(31, 41, 55, 0.4); /* gray-800 with opacity */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Column gradient backgrounds */
+        
+        /* === MISC & UI POLISH === */
         .col-agreed { background-image: linear-gradient(to top, rgba(16, 185, 129, 0.1), transparent); }
         .col-disagreed { background-image: linear-gradient(to top, rgba(239, 68, 68, 0.1), transparent); }
         .col-on-hold { background-image: linear-gradient(to top, rgba(245, 158, 11, 0.1), transparent); }
         .col-unneeded { background-image: linear-gradient(to top, rgba(107, 114, 128, 0.1), transparent); }
-
-        /* Dragging styles */
         .dragging { opacity: 0.5; transform: rotate(2deg); }
-        .drag-over { border: 2px dashed #3b82f6; /* blue-500 */ }
-
-        /* Priority Badge Colors */
-        .priority-critical { background-color: #ef4444; color: white; } /* red-500 */
-        .priority-high { background-color: #f97316; color: white; } /* orange-500 */
-        .priority-medium { background-color: #eab308; color: white; } /* yellow-500 */
-        .priority-low { background-color: #22c55e; color: white; } /* green-500 */
-
-        /* Gemini Chat Bubbles */
+        .drag-over { border: 2px dashed #3b82f6; }
+        .priority-critical { background-color: #ef4444; color: white; }
+        .priority-high { background-color: #f97316; color: white; }
+        .priority-medium { background-color: #eab308; color: white; }
+        .priority-low { background-color: #22c55e; color: white; }
         .chat-bubble { max-width: 80%; width: fit-content; }
         .chat-bubble-user { background-color: #3b82f6; color: white; border-radius: 1rem 1rem 0 1rem; margin-left: auto;}
         .chat-bubble-model { background-color: #e5e7eb; color: #1f2937; border-radius: 1rem 1rem 1rem 0; }
         .dark .chat-bubble-model { background-color: #374151; color: #e5e7eb; }
-
     </style>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300">
+<body class="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300 min-h-screen">
 
     <!-- === HEADER === -->
-    <header class="p-4 bg-white/30 dark:bg-gray-800/30 backdrop-filter backdrop-blur-lg -webkit-backdrop-filter: blur(10px) border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-10">
+    <header class="p-4 bg-white/30 dark:bg-slate-900/60 backdrop-filter backdrop-blur-lg -webkit-backdrop-filter: blur(10px) border-b border-gray-200/50 dark:border-slate-700/50 sticky top-0 z-10">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Local Requirements Board</h1>
             
             <div id="project-controls" class="flex items-center gap-2 flex-wrap">
-                <select id="project-selector" class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
-                <button id="new-project-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    New Project
-                </button>
-                <button id="import-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105">
-                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    Import
-                </button>
-                <button id="export-json-btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105">
-                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Export JSON
-                </button>
-                <button id="export-txt-btn" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105">
-                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    Export TXT
-                </button>
-                <button id="theme-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 focus:ring-blue-500">
-                    <svg id="theme-icon-light" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <select id="project-selector" class="bg-white dark:bg-slate-800/50 border-gray-300 dark:border-slate-600 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"></select>
+                <button id="new-project-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-2 rounded-md text-sm inline-flex items-center transition-transform transform hover:scale-105" title="New Project"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg></button>
+                <button id="import-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-3 py-2 rounded-md text-sm inline-flex items-center transition-transform transform hover:scale-105" title="Import from JSON"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg></button>
+                <div class="flex rounded-md shadow-sm">
+                     <button id="export-json-btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-l-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105" title="Export to JSON">JSON</button>
+                     <button id="export-txt-btn" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded-r-md text-sm inline-flex items-center gap-2 transition-transform transform hover:scale-105 border-l border-purple-400" title="Export to TXT">TXT</button>
+                </div>
+                <button id="gemini-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-slate-700" title="Toggle AI Assistant"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></button>
+                <button id="theme-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-slate-700" title="Toggle Theme">
+                    <svg id="theme-icon-light" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
             </div>
             
             <div id="filter-controls" class="w-full flex items-center gap-4 flex-wrap mt-4">
-                 <input type="search" id="search-input" placeholder="Search title, owner, tags..." class="flex-grow bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                 <select id="filter-priority" class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">All Priorities</option>
-                    <option value="Critical">Critical</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
+                 <input type="search" id="search-input" placeholder="Search title, owner, tags..." class="flex-grow bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                 <select id="filter-priority" class="bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Priorities</option> <option value="Critical">Critical</option> <option value="High">High</option> <option value="Medium">Medium</option> <option value="Low">Low</option>
                 </select>
-                <select id="sort-by" class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Sort By</option>
-                    <option value="priority">Priority</option>
-                    <option value="dueDate">Due Date</option>
+                <select id="sort-by" class="bg-white border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    <option value="">Sort By</option> <option value="priority">Priority</option> <option value="dueDate">Due Date</option>
                 </select>
             </div>
         </div>
@@ -105,492 +104,164 @@
 
     <!-- === MAIN BOARD === -->
     <main id="board" class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Columns will be injected by JavaScript -->
+        <!-- Columns will be injected here -->
     </main>
     
     <!-- === GEMINI ASSISTANT SECTION === -->
-    <section id="gemini-chat-section" class="max-w-7xl mx-auto p-4 mt-6">
+    <section id="gemini-chat-section" class="max-w-7xl mx-auto p-4 mt-6 hidden">
         <div class="glass-section p-6 rounded-xl">
             <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Gemini Assistant</h2>
-            <div class="mb-4">
+            <div id="gemini-api-key-container" class="mb-4">
                  <label for="gemini-api-key" class="block text-sm font-medium mb-1">Your Google AI Gemini API Key</label>
-                 <div class="flex gap-2">
-                    <input type="password" id="gemini-api-key" placeholder="Enter your API key here" class="flex-grow bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-                    <button id="save-api-key-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save Key</button>
-                </div>
-                <p class="text-xs text-gray-500 mt-1">Your key is stored only in your browser's localStorage.</p>
+                 <div class="flex gap-2"> <input type="password" id="gemini-api-key" placeholder="Enter key to enable assistant" class="flex-grow rounded-md border-gray-300"> <button id="save-api-key-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save</button> </div>
+                 <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Key is stored only in your browser's localStorage.</p>
             </div>
             
-            <div id="chat-container" class="h-64 overflow-y-auto bg-white/30 dark:bg-gray-800/30 rounded-lg p-4 mb-4 flex flex-col gap-4">
-                <!-- Chat messages will be added here -->
-                 <div class="chat-bubble chat-bubble-model">Hello! Describe the requirements you need, and I'll add them to the 'Agreed Requirements' column for you. For example: "We need a login page with email and password fields, and a user profile section."</div>
+            <div id="chat-ui-container" class="hidden">
+                 <div id="chat-container" class="h-64 overflow-y-auto bg-black/10 dark:bg-black/20 rounded-lg p-4 mb-4 flex flex-col gap-4">
+                     <div class="chat-bubble chat-bubble-model">Hello! Describe requirements and I'll create them as cards with smart tags in the 'Agreed' column.</div>
+                 </div>
+                <form id="gemini-form" class="flex gap-2 items-start">
+                    <textarea id="gemini-input" rows="1" placeholder="Press Enter to send..." class="flex-grow rounded-md border-gray-300 resize-none p-2"></textarea>
+                    <button type="submit" id="gemini-submit-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold p-3 rounded-md disabled:bg-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
+                </form>
             </div>
-
-            <form id="gemini-form" class="flex gap-2">
-                <textarea id="gemini-input" rows="1" placeholder="Type your requirements here..." class="flex-grow bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 resize-none p-2"></textarea>
-                <button type="submit" id="gemini-submit-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </button>
-            </form>
         </div>
     </section>
 
     <!-- === NO PROJECT STATE === -->
     <div id="no-project-state" class="hidden text-center p-20">
         <h2 class="text-2xl font-semibold mb-4">No projects found.</h2>
-        <p class="mb-6 text-gray-600 dark:text-gray-400">Get started by creating your first project.</p>
-        <button id="create-first-project-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg">
-            Create First Project
-        </button>
+        <p class="mb-6 text-gray-600 dark:text-slate-400">Get started by creating your first project.</p>
+        <button id="create-first-project-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg">Create First Project</button>
     </div>
 
-    <!-- === MODAL === -->
-    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+    <!-- === MODAL & OTHER UI === -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-70 hidden z-40"></div>
     <div id="card-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass-card rounded-xl p-8 w-11/12 max-w-2xl shadow-2xl hidden z-50 transition-transform transform scale-95">
-        <form id="card-form" class="space-y-4">
-            <h2 id="modal-title" class="text-2xl font-bold mb-6">Add New Requirement</h2>
-            <input type="hidden" id="card-id">
-            <input type="hidden" id="card-column">
-
-            <div>
-                <label for="card-title" class="block text-sm font-medium mb-1">Title <span class="text-red-500">*</span></label>
-                <input type="text" id="card-title" required class="w-full bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <label for="card-description" class="block text-sm font-medium mb-1">Description</label>
-                <textarea id="card-description" rows="3" class="w-full bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500"></textarea>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="card-priority" class="block text-sm font-medium mb-1">Priority</label>
-                    <select id="card-priority" class="w-full bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-                        <option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="card-due-date" class="block text-sm font-medium mb-1">Due Date</label>
-                    <input type="date" id="card-due-date" class="w-full bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-                </div>
-            </div>
-             <div>
-                <label for="card-owner" class="block text-sm font-medium mb-1">Owner</label>
-                <input type="text" id="card-owner" class="w-full bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <label for="card-tags" class="block text-sm font-medium mb-1">Tags (comma-separated)</label>
-                <input type="text" id="card-tags" placeholder="e.g. UI, API, Database" class="w-full bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div class="flex justify-end gap-4 mt-8">
-                 <button type="button" id="delete-card-btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md hidden">Delete</button>
-                 <button type="button" id="cancel-btn" class="bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 font-semibold px-4 py-2 rounded-md">Cancel</button>
-                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save Requirement</button>
-            </div>
-        </form>
-        <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
-             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
+        <!-- Modal content is the same as before -->
+        <form id="card-form" class="space-y-4"><h2 id="modal-title" class="text-2xl font-bold mb-6"></h2> <input type="hidden" id="card-id"> <input type="hidden" id="card-column"> <div> <label for="card-title" class="block text-sm font-medium mb-1">Title <span class="text-red-500">*</span></label> <input type="text" id="card-title" required class="w-full rounded-md border-gray-300"> </div><div> <label for="card-description" class="block text-sm font-medium mb-1">Description</label> <textarea id="card-description" rows="3" class="w-full rounded-md border-gray-300"></textarea> </div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div> <label for="card-priority" class="block text-sm font-medium mb-1">Priority</label> <select id="card-priority" class="w-full rounded-md border-gray-300"> <option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option> </select> </div><div> <label for="card-due-date" class="block text-sm font-medium mb-1">Due Date</label> <input type="date" id="card-due-date" class="w-full rounded-md border-gray-300"> </div></div><div> <label for="card-owner" class="block text-sm font-medium mb-1">Owner</label> <input type="text" id="card-owner" class="w-full rounded-md border-gray-300"> </div><div> <label for="card-tags" class="block text-sm font-medium mb-1">Tags (comma-separated)</label> <input type="text" id="card-tags" placeholder="e.g. UI, API, Database" class="w-full rounded-md border-gray-300"> </div><div class="flex justify-end gap-4 mt-8"> <button type="button" id="delete-card-btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md hidden">Delete</button> <button type="button" id="cancel-btn" class="bg-gray-300 hover:bg-gray-400 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-800 dark:text-gray-200 font-semibold px-4 py-2 rounded-md">Cancel</button> <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Save</button> </div></form> <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> </button>
     </div>
-    
-    <!-- === TOAST NOTIFICATION === -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
     <input type="file" id="import-file-input" class="hidden" accept=".json">
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // === CONFIGURATION ===
     const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
-    // === DOM ELEMENT REFERENCES (shortened for brevity) ===
     const $ = (selector) => document.querySelector(selector);
-    const board = $('#board'), projectSelector = $('#project-selector'), newProjectBtn = $('#new-project-btn'),
-        modalBackdrop = $('#modal-backdrop'), cardModal = $('#card-modal'), cardForm = $('#card-form'),
-        modalTitle = $('#modal-title'), deleteCardBtn = $('#delete-card-btn'), themeToggleBtn = $('#theme-toggle-btn'),
-        themeIconLight = $('#theme-icon-light'), themeIconDark = $('#theme-icon-dark'), toastContainer = $('#toast-container'),
-        noProjectState = $('#no-project-state'), createFirstProjectBtn = $('#create-first-project-btn'),
-        exportJsonBtn = $('#export-json-btn'), exportTxtBtn = $('#export-txt-btn'), importBtn = $('#import-btn'),
-        importFileInput = $('#import-file-input'), searchInput = $('#search-input'), filterPrioritySelect = $('#filter-priority'),
-        sortBySelect = $('#sort-by'),
-        geminiForm = $('#gemini-form'), geminiApiKeyInput = $('#gemini-api-key'), saveApiKeyBtn = $('#save-api-key-btn'),
-        geminiInput = $('#gemini-input'), geminiSubmitBtn = $('#gemini-submit-btn'), chatContainer = $('#chat-container');
+    const $$ = (selector) => document.querySelectorAll(selector);
 
-    // === APPLICATION STATE ===
-    let appData = { projects: [], activeProjectId: null, theme: 'light', geminiApiKey: null };
+    // DOM ELEMENT REFERENCES
+    const board = $('#board'), projectSelector = $('#project-selector'), themeToggleBtn = $('#theme-toggle-btn'), 
+        noProjectState = $('#no-project-state'), createFirstProjectBtn = $('#create-first-project-btn'),
+        modalBackdrop = $('#modal-backdrop'), cardModal = $('#card-modal'), cardForm = $('#card-form'), 
+        geminiChatSection = $('#gemini-chat-section'), geminiToggleBtn = $('#gemini-toggle-btn'), 
+        geminiApiKeyInput = $('#gemini-api-key'), saveApiKeyBtn = $('#save-api-key-btn'), 
+        geminiForm = $('#gemini-form'), geminiInput = $('#gemini-input'), chatContainer = $('#chat-container'),
+        geminiApiKeyContainer = $('#gemini-api-key-container'), chatUiContainer = $('#chat-ui-container'),
+        searchInput = $('#search-input'), filterPrioritySelect = $('#filter-priority'), sortBySelect = $('#sort-by'),
+        importBtn = $('#import-btn'), importFileInput = $('#import-file-input'),
+        exportJsonBtn = $('#export-json-btn'), exportTxtBtn = $('#export-txt-btn');
+    
+    // APPLICATION STATE
+    let appData = { projects: [], activeProjectId: null, theme: 'light', geminiApiKey: null, geminiChatVisible: false };
     let debounceTimer;
 
-    const columnConfig = {
-        agreed: { title: "Agreed Requirements", color: "green" },
-        disagreed: { title: "Disagreed Requirements", color: "red" },
-        onHold: { title: "On-Hold Requirements", color: "amber" },
-        unneeded: { title: "Unneeded Requirements", color: "gray" },
-    };
+    const columnConfig = { agreed: { title: "Agreed Requirements", color: "green" }, disagreed: { title: "Disagreed Requirements", color: "red" }, onHold: { title: "On-Hold Requirements", color: "amber" }, unneeded: { title: "Unneeded Requirements", color: "gray" },};
     const priorityOrder = { "Critical": 4, "High": 3, "Medium": 2, "Low": 1 };
     
     // === DATA & STATE MANAGEMENT ===
     const generateUUID = () => crypto.randomUUID();
-
-    const loadData = () => {
-        const data = JSON.parse(localStorage.getItem('requirementsBoardData'));
-        if (data) appData = { ...appData, ...data };
-        geminiApiKeyInput.value = appData.geminiApiKey || '';
-        checkGeminiReady();
-        applyTheme();
-    };
-    
-    const saveData = () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            localStorage.setItem('requirementsBoardData', JSON.stringify(appData));
-            showToast('Progress saved!', 'success');
-        }, 500);
-    };
-
+    const loadData = () => { try { const data = JSON.parse(localStorage.getItem('requirementsBoardData')); if(data) appData = { ...appData, ...data };} catch (e) { console.error("Could not load data", e); } geminiApiKeyInput.value = appData.geminiApiKey || ''; applyTheme(); updateGeminiUI(); };
+    const saveData = () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { localStorage.setItem('requirementsBoardData', JSON.stringify(appData)); }, 500); };
     const getActiveProject = () => appData.projects.find(p => p.id === appData.activeProjectId);
 
     // === MAIN RENDER FUNCTIONS ===
     const renderApp = () => {
         const hasProjects = appData.projects.length > 0;
-        board.classList.toggle('hidden', !hasProjects);
-        $('#gemini-chat-section').classList.toggle('hidden', !hasProjects);
-        noProjectState.classList.toggle('hidden', hasProjects);
-
-        if (hasProjects) {
-            populateProjectSelector();
-            renderBoard();
-        }
+        $$('#project-selector, #filter-controls, #export-json-btn, #export-txt-btn').forEach(el => el.style.display = hasProjects ? '' : 'none');
+        board.classList.toggle('hidden', !hasProjects); noProjectState.classList.toggle('hidden', hasProjects);
+        if (hasProjects) { populateProjectSelector(); renderBoard(); } 
+        updateGeminiUI(); // This also handles showing/hiding the section
     };
     
     const renderBoard = () => {
         board.innerHTML = '';
         const project = getActiveProject();
 
-        if (!project) {
-            if (appData.projects.length > 0) {
-                appData.activeProjectId = appData.projects[0].id;
-                saveData(); renderBoard();
-            }
-            return;
-        }
+        if (!project) { if(appData.projects.length>0){ appData.activeProjectId = appData.projects[0].id; saveData(); renderBoard(); } return; }
 
-        Object.keys(columnConfig).forEach(columnId => {
-            const columnMeta = columnConfig[columnId];
+        Object.entries(columnConfig).forEach(([columnId, columnMeta]) => {
             const columnEl = document.createElement('section');
-            columnEl.id = columnId;
-            columnEl.className = `board-column col-${columnId} p-4 rounded-xl bg-gray-200/50 dark:bg-gray-800/50 flex flex-col`;
-            columnEl.dataset.columnId = columnId;
-            
-            const cards = getFilteredAndSortedCards(project.columns[columnId]);
-            columnEl.innerHTML = `
-                <h2 class="text-lg font-bold mb-4 text-${columnMeta.color}-700 dark:text-${columnMeta.color}-300 flex items-center justify-between">
-                    <span>${columnMeta.title}</span>
-                    <span class="text-sm font-normal bg-${columnMeta.color}-200 dark:bg-${columnMeta.color}-800 px-2 py-1 rounded-full">${cards.length}</span>
-                </h2>
-                <div class="card-container flex-grow space-y-4 overflow-y-auto" style="min-height: 200px;"></div>
-                <div class="inline-add-form-container mt-2"></div>
-                <button class="add-card-btn mt-4 w-full bg-${columnMeta.color}-500/20 hover:bg-${columnMeta.color}-500/40 text-${columnMeta.color}-800 dark:text-${columnMeta.color}-200 font-semibold p-2 rounded-md transition-all duration-200 flex items-center justify-center gap-2">
-                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                     Add Requirement
-                </button>
-            `;
-            
+            columnEl.id = columnId; columnEl.className = `board-column col-${columnId} p-4 rounded-xl bg-white/30 dark:bg-slate-800/50 flex flex-col`; columnEl.dataset.columnId = columnId;
+            const cards = getFilteredAndSortedCards(project.columns[columnId] || []);
+            columnEl.innerHTML = `<h2 class="text-lg font-bold mb-4 text-${columnMeta.color}-700 dark:text-${columnMeta.color}-300 flex items-center justify-between"><span>${columnMeta.title}</span><span class="text-sm font-normal bg-${columnMeta.color}-200 dark:bg-${columnMeta.color}-800/50 px-2 py-1 rounded-full">${cards.length}</span></h2><div class="card-container flex-grow space-y-4 overflow-y-auto pr-2 min-h-[200px]"></div><div class="inline-add-form-container mt-2"></div><button class="add-card-btn mt-4 w-full bg-white/40 dark:bg-slate-700/50 hover:bg-white/60 dark:hover:bg-slate-700 font-semibold p-2 rounded-md transition-all flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Add Card</button>`;
             const cardContainer = columnEl.querySelector('.card-container');
-            if (cards.length === 0) {
-                 cardContainer.innerHTML = '<p class="text-sm text-gray-500 text-center mt-8">No requirements here.</p>';
-            }
-            cards.forEach(card => cardContainer.appendChild(createCardElement(card, columnId)));
+            if(cards.length === 0) cardContainer.innerHTML = '<p class="text-sm text-slate-500 dark:text-slate-400 text-center mt-8">No cards here.</p>';
+            else cards.forEach(card => cardContainer.appendChild(createCardElement(card, columnId)));
+            
+            // Unconditional Footer
+            const footer = document.createElement('div'); footer.className = 'text-center text-xs text-slate-500 dark:text-slate-400 p-2 mt-4 border-t border-slate-300/50 dark:border-slate-700/50 font-semibold'; footer.textContent = columnMeta.title;
+            columnEl.appendChild(footer);
+
             board.appendChild(columnEl);
         });
         setupDragAndDrop();
     };
+    
+    const getFilteredAndSortedCards=(cards)=>{let c=cards.filter(card=>{const s=searchInput.value.toLowerCase(),p=filterPrioritySelect.value;return(s===''||card.title.toLowerCase().includes(s)||(card.description||'').toLowerCase().includes(s)||(card.owner||'').toLowerCase().includes(s)||(card.tags||[]).some(t=>t.toLowerCase().includes(s)))&&(p===''||card.priority===p)});if(sortBySelect.value==='priority')c.sort((a,b)=>priorityOrder[b.priority]-priorityOrder[a.priority]);else if(sortBySelect.value==='dueDate')c.sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));return c};
+    const createCardElement=(card,columnId)=>{const e=document.createElement('div');e.className='glass-card p-4 rounded-lg shadow-md cursor-pointer hover:shadow-xl transition-all duration-200';e.draggable=true;e.dataset.cardId=card.id;e.dataset.columnId=columnId;const t=(card.tags||[]).map(g=>`<span class="bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-blue-100 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${g}</span>`).join('');e.innerHTML=`<div class="flex justify-between items-start"><h3 class="font-bold text-md mb-2 pr-2 text-gray-900 dark:text-white">${card.title}</h3><span class="priority-${card.priority.toLowerCase()} text-xs font-bold px-2 py-1 rounded-md whitespace-nowrap">${card.priority}</span></div><p class="text-sm text-slate-600 dark:text-slate-300 mb-3 break-words">${card.description||''}</p><div class="text-xs text-slate-500 dark:text-slate-400 space-y-1">${card.owner?`<p><strong>Owner:</strong> ${card.owner}</p>`:''}${card.dueDate?`<p><strong>Due:</strong> ${card.dueDate}</p>`:''}</div>${t?`<div class="mt-3">${t}</div>`:''}<div class="flex justify-end mt-2"> <button class="edit-card-btn p-1 text-slate-500 hover:text-blue-500"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z"></path></svg> </button> </div>`;e.querySelector('.edit-card-btn').addEventListener('click',ev=>{ev.stopPropagation();openModal(card.id,columnId)});return e};
 
-    const getFilteredAndSortedCards = (cards) => {
-        const searchTerm = searchInput.value.toLowerCase(), priorityFilter = filterPrioritySelect.value, sortBy = sortBySelect.value;
-        let filteredCards = cards.filter(card => 
-            (searchTerm === '' || card.title.toLowerCase().includes(searchTerm) || card.description.toLowerCase().includes(searchTerm) || card.owner.toLowerCase().includes(searchTerm) || card.tags.some(tag => tag.toLowerCase().includes(searchTerm))) &&
-            (priorityFilter === '' || card.priority === priorityFilter)
-        );
-        if (sortBy === 'priority') filteredCards.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
-        else if (sortBy === 'dueDate') filteredCards.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-        return filteredCards;
-    };
-    
-    const createCardElement = (card, columnId) => {
-        const cardEl = document.createElement('div');
-        cardEl.className = 'glass-card p-4 rounded-lg shadow-md cursor-pointer hover:shadow-xl transition-shadow duration-200';
-        cardEl.draggable = true;
-        cardEl.dataset.cardId = card.id;
-        cardEl.dataset.columnId = columnId;
-        const tagsHtml = card.tags.map(tag => `<span class="bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${tag}</span>`).join('');
-        
-        cardEl.innerHTML = `
-            <div class="flex justify-between items-start"><h3 class="font-bold text-md mb-2 pr-2">${card.title}</h3><span class="priority-${card.priority.toLowerCase()} text-xs font-bold px-2 py-1 rounded-md whitespace-nowrap">${card.priority}</span></div>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">${card.description || ''}</p>
-            <div class="text-xs text-gray-500 dark:text-gray-400 space-y-1">
-                ${card.owner ? `<p><strong>Owner:</strong> ${card.owner}</p>` : ''}
-                ${card.dueDate ? `<p><strong>Due:</strong> ${card.dueDate}</p>` : ''}
-            </div>
-            ${tagsHtml ? `<div class="mt-3">${tagsHtml}</div>` : ''}
-            <div class="flex justify-end mt-2">
-                 <button class="edit-card-btn p-1 text-gray-500 hover:text-blue-500 rounded-full">
-                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z"></path></svg>
-                 </button>
-            </div>
-        `;
-        cardEl.querySelector('.edit-card-btn').addEventListener('click', (e) => { e.stopPropagation(); openModal(card.id, columnId); });
-        return cardEl;
-    };
-    
     // === UI INTERACTIONS & FEATURES ===
-
-    // Inline Add Form
-    const showInlineAddForm = (columnId, container) => {
-        container.innerHTML = `
-            <div class="p-2 glass-card rounded-md">
-                <textarea class="w-full bg-white/50 dark:bg-gray-800/50 rounded-md border-gray-300 dark:border-gray-600 p-2 text-sm" placeholder="Enter a title for this requirement..."></textarea>
-                <div class="flex justify-end gap-2 mt-2">
-                    <button class="cancel-inline-add px-3 py-1 text-xs rounded-md bg-gray-300 hover:bg-gray-400 dark:bg-gray-600">Cancel</button>
-                    <button class="save-inline-add px-3 py-1 text-xs rounded-md bg-blue-500 hover:bg-blue-600 text-white">Add Card</button>
-                </div>
-            </div>
-        `;
-        const textarea = container.querySelector('textarea');
-        textarea.focus();
-        container.querySelector('.save-inline-add').onclick = () => {
-            const title = textarea.value.trim();
-            if(title) {
-                const now = new Date().toISOString();
-                const newCard = { id: generateUUID(), title, description: '', priority: 'Medium', dueDate: '', owner: '', tags: [], links: [], createdAt: now, updatedAt: now };
-                getActiveProject().columns[columnId].push(newCard);
-                getActiveProject().updatedAt = now;
-                saveData(); renderBoard();
-            }
-        };
-        container.querySelector('.cancel-inline-add').onclick = () => renderBoard();
-    };
+    const showInlineAddForm=(columnId,container)=>{container.innerHTML=`<div class="p-2 glass-card rounded-md"><textarea class="w-full bg-white/50 dark:bg-slate-700/50 rounded-md border-gray-300 dark:border-slate-600 p-2 text-sm" placeholder="Title... (Ctrl+Enter to save)"></textarea><div class="flex justify-end gap-2 mt-2"><button class="cancel-inline-add px-3 py-1 text-xs rounded-md bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500">Cancel</button><button class="save-inline-add px-3 py-1 text-xs rounded-md bg-blue-500 hover:bg-blue-600 text-white">Add</button></div></div>`;container.querySelector('textarea').focus()};
+    const populateProjectSelector=()=>{projectSelector.innerHTML=appData.projects.map(p=>`<option value="${p.id}" ${p.id===appData.activeProjectId?'selected':''}>${p.name}</option>`).join('')};
+    const createNewProject=()=>{const p=prompt("Enter the new project name:");if(p&&p.trim()){const n=new Date().toISOString(),i=generateUUID();appData.projects.push({id:i,name:p.trim(),createdAt:n,updatedAt:n,columns:{agreed:[],disagreed:[],onHold:[],unneeded:[]}});appData.activeProjectId=i;saveData();renderApp();showToast(`Project "${p}" created!`,'success')}else if(p!==null)showToast('Project name cannot be empty.','error')};
     
-    // Project Management & Selector
-    const populateProjectSelector = () => {
-        projectSelector.innerHTML = appData.projects.map(p => `<option value="${p.id}" ${p.id === appData.activeProjectId ? 'selected' : ''}>${p.name}</option>`).join('');
-    };
+    // DRAG & DROP + MODAL
+    function setupDragAndDrop(){$$('[draggable="true"]').forEach(c=>{c.addEventListener('dragstart',e=>e.target.classList.add('dragging'));c.addEventListener('dragend',e=>e.target.classList.remove('dragging'))});$$('.card-container').forEach(c=>{c.addEventListener('dragover',e=>{e.preventDefault();c.parentElement.classList.add('drag-over')});c.addEventListener('dragleave',e=>c.parentElement.classList.remove('drag-over'));c.addEventListener('drop',e=>{e.preventDefault();c.parentElement.classList.remove('drag-over');const d=$('.dragging');if(!d)return;const t=c.parentElement.dataset.columnId,s=d.dataset.columnId,i=d.dataset.cardId;if(t===s)return;const p=getActiveProject();const n=p.columns[s].findIndex(c=>c.id===i);const[m]=p.columns[s].splice(n,1);(p.columns[t]=p.columns[t]||[]).push(m);p.updatedAt=new Date().toISOString();saveData();renderBoard();showToast(`Card moved.`,'info')})})};
+    const openModal=(c=null,d=null)=>{cardForm.reset();$('#card-id').value=c||'';$('#card-column').value=d||'';$('#delete-card-btn').classList.toggle('hidden',!c);if(c){$('#modal-title').textContent='Edit Requirement';const a=getActiveProject().columns[d].find(e=>e.id===c);$('#card-title').value=a.title;$('#card-description').value=a.description;$('#card-priority').value=a.priority;$('#card-due-date').value=a.dueDate;$('#card-owner').value=a.owner;$('#card-tags').value=(a.tags||[]).join(', ')}else{$('#modal-title').textContent=`Add to ${columnConfig[d].title}`}modalBackdrop.classList.remove('hidden');cardModal.classList.remove('hidden');setTimeout(()=>cardModal.classList.remove('scale-95'),10)};
+    const closeModal=()=>{cardModal.classList.add('scale-95');setTimeout(()=>{modalBackdrop.classList.add('hidden');cardModal.classList.add('hidden')},200)};
 
-    const createNewProject = () => {
-        const projectName = prompt("Enter the new project name:");
-        if (projectName && projectName.trim()) {
-            const now = new Date().toISOString(), id = generateUUID();
-            appData.projects.push({ id, name: projectName.trim(), createdAt: now, updatedAt: now, columns: { agreed: [], disagreed: [], onHold: [], unneeded: [] }});
-            appData.activeProjectId = id;
-            saveData(); renderApp();
-            showToast(`Project "${projectName}" created!`, 'success');
-        } else if (projectName !== null) showToast('Project name cannot be empty.', 'error');
-    };
+    // GEMINI ASSISTANT
+    const updateGeminiUI=()=>{const p=appData.projects.length>0;geminiChatSection.classList.toggle('hidden',!appData.geminiChatVisible||!p);const k=!!appData.geminiApiKey;geminiApiKeyContainer.classList.toggle('hidden',k);chatUiContainer.classList.toggle('hidden',!k);if(k){$('#gemini-submit-btn').disabled=false;geminiInput.placeholder="Press Enter to send..."}};
+    const addChatMessage=(m,s)=>{const b=document.createElement('div');b.className=`chat-bubble p-3 rounded-lg chat-bubble-${s} text-sm`;b.textContent=m;chatContainer.appendChild(b);chatContainer.scrollTop=chatContainer.scrollHeight};
+    const handleGeminiSubmit=async(e)=>{e.preventDefault();const i=geminiInput.value.trim();if(!i)return;addChatMessage(i,'user');geminiInput.value='';$('#gemini-submit-btn').disabled=true;const p=`You are a requirements assistant. Analyze the user's text and extract actionable requirements. For each requirement, generate a JSON object with 'title', 'description', 'priority' (Low, Medium, High, or Critical), and 'tags' (an array of 1-3 relevant string keywords). Return a raw JSON array of these objects without any markdown, comments, or explanations.`;try{const r=await fetch(`${GEMINI_API_URL}?key=${appData.geminiApiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:`${p}\n\nUser text: "${i}"`}]}]})});if(!r.ok)throw new Error(`API error: ${r.statusText}`);const d=await r.json();const t=d.candidates[0].content.parts[0].text.replace(/```json/g,'').replace(/```/g,'').trim();const q=JSON.parse(t);const o=getActiveProject();let a=0;const n=new Date().toISOString();(Array.isArray(q)?q:[q]).forEach(req=>{if(req.title){o.columns.agreed.push({id:generateUUID(),title:req.title,description:req.description||'',priority:['Low','Medium','High','Critical'].includes(req.priority)?req.priority:'Medium',tags:Array.isArray(req.tags)?req.tags:[],dueDate:'',owner:'',links:[],createdAt:n,updatedAt:n});a++}});if(a>0){addChatMessage(`I've added ${a} requirement(s) to the "Agreed" column.`, 'model');o.updatedAt=n;saveData();showToast(`${a} cards created by AI`,'success');renderBoard()}else{addChatMessage("I couldn't find any actionable requirements.","model")}}catch(error){addChatMessage(`Sorry, I couldn't process that: ${error.message}`,'model');showToast('Gemini API request failed.','error')}finally{$('#gemini-submit-btn').disabled=false}};
     
-    // Drag & Drop
-    function setupDragAndDrop() {
-        document.querySelectorAll('[draggable="true"]').forEach(card => {
-            card.addEventListener('dragstart', e => { e.target.classList.add('dragging'); });
-            card.addEventListener('dragend', e => e.target.classList.remove('dragging'));
-        });
-        document.querySelectorAll('.card-container').forEach(container => {
-            container.addEventListener('dragover', e => { e.preventDefault(); container.parentElement.classList.add('drag-over'); });
-            container.addEventListener('dragleave', e => container.parentElement.classList.remove('drag-over'));
-            container.addEventListener('drop', e => {
-                e.preventDefault(); container.parentElement.classList.remove('drag-over');
-                const draggedCard = $('.dragging');
-                if (!draggedCard) return;
-                const targetColumnId = container.parentElement.dataset.columnId, sourceColumnId = draggedCard.dataset.columnId, cardId = draggedCard.dataset.cardId;
-                if (targetColumnId === sourceColumnId) return;
-                const project = getActiveProject();
-                const cardIndex = project.columns[sourceColumnId].findIndex(c => c.id === cardId);
-                const [cardToMove] = project.columns[sourceColumnId].splice(cardIndex, 1);
-                project.columns[targetColumnId].push(cardToMove);
-                project.updatedAt = new Date().toISOString();
-                saveData(); renderBoard();
-                showToast(`Moved to ${columnConfig[targetColumnId].title}`, 'info');
-            });
-        });
-    }
-
-    // Modal
-    const openModal = (cardId = null, columnId = null) => {
-        cardForm.reset();
-        $('#card-id').value = cardId || ''; $('#card-column').value = columnId || '';
-        deleteCardBtn.classList.toggle('hidden', !cardId);
-        if (cardId) {
-            modalTitle.textContent = 'Edit Requirement';
-            const card = getActiveProject().columns[columnId].find(c => c.id === cardId);
-            $('#card-title').value = card.title; $('#card-description').value = card.description;
-            $('#card-priority').value = card.priority; $('#card-due-date').value = card.dueDate;
-            $('#card-owner').value = card.owner; $('#card-tags').value = card.tags.join(', ');
-        } else {
-            modalTitle.textContent = `Add Requirement to ${columnConfig[columnId].title}`;
-        }
-        modalBackdrop.classList.remove('hidden'); cardModal.classList.remove('hidden');
-        setTimeout(() => cardModal.classList.remove('scale-95'), 10);
-    };
-    const closeModal = () => {
-        cardModal.classList.add('scale-95');
-        setTimeout(() => { modalBackdrop.classList.add('hidden'); cardModal.classList.add('hidden'); }, 200);
-    };
-
-    // Theme Toggle
-    const applyTheme = () => {
-        document.documentElement.className = appData.theme;
-        themeIconLight.classList.toggle('hidden', appData.theme === 'dark');
-        themeIconDark.classList.toggle('hidden', appData.theme !== 'dark');
-    };
-    const toggleTheme = () => { appData.theme = (appData.theme === 'dark') ? 'light' : 'dark'; applyTheme(); saveData(); };
-
-    // Toast Notifications
-    const showToast = (message, type = 'info') => {
-        const toast = document.createElement('div');
-        const colors = { info: 'bg-blue-500', success: 'bg-green-500', error: 'bg-red-500' };
-        toast.className = `text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300 transform translate-x-full ${colors[type]}`;
-        toast.textContent = message; toastContainer.appendChild(toast);
-        setTimeout(() => toast.classList.remove('translate-x-full'), 100);
-        setTimeout(() => {
-            toast.classList.add('opacity-0');
-            toast.addEventListener('transitionend', () => toast.remove());
-        }, 3000);
-    };
-
-    // Gemini Assistant
-    const checkGeminiReady = () => {
-        const ready = !!appData.geminiApiKey && !!getActiveProject();
-        geminiSubmitBtn.disabled = !ready;
-        geminiInput.placeholder = ready ? "Type your requirements here..." : "Please save an API key and create a project first.";
-    };
-    const addChatMessage = (message, sender) => {
-        const bubble = document.createElement('div');
-        bubble.className = `chat-bubble p-3 rounded-lg chat-bubble-${sender}`;
-        bubble.textContent = message;
-        chatContainer.appendChild(bubble);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    };
-    const handleGeminiSubmit = async (e) => {
-        e.preventDefault();
-        const userInput = geminiInput.value.trim();
-        if (!userInput || !appData.geminiApiKey) return;
-
-        addChatMessage(userInput, 'user');
-        geminiInput.value = ''; geminiSubmitBtn.disabled = true;
-
-        const systemPrompt = `You are a requirements assistant. Analyze the user's text and extract actionable requirements. For each requirement, generate a JSON object with 'title', 'description', and 'priority' (Low, Medium, High, or Critical). Return a JSON array of these objects. ONLY output the raw JSON array. Do not include markdown ticks, comments, or explanations.`;
-        
-        try {
-            const response = await fetch(`${GEMINI_API_URL}?key=${appData.geminiApiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `${systemPrompt}\n\nUser text: "${userInput}"` }] }] })
-            });
-
-            if (!response.ok) throw new Error(`API error: ${response.statusText}`);
-            
-            const data = await response.json();
-            const jsonText = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
-            const requirements = JSON.parse(jsonText);
-            
-            const project = getActiveProject();
-            let addedCount = 0;
-            const now = new Date().toISOString();
-            
-            (Array.isArray(requirements) ? requirements : [requirements]).forEach(req => {
-                if (req.title) {
-                    project.columns.agreed.push({
-                        id: generateUUID(), title: req.title, description: req.description || '',
-                        priority: ['Low', 'Medium', 'High', 'Critical'].includes(req.priority) ? req.priority : 'Medium',
-                        dueDate: '', owner: '', tags: ['gemini-generated'], links: [], createdAt: now, updatedAt: now
-                    });
-                    addedCount++;
-                }
-            });
-            if (addedCount > 0) {
-                project.updatedAt = now;
-                addChatMessage(`I've added ${addedCount} requirement(s) to the "Agreed" column for you.`, 'model');
-                saveData(); renderBoard();
-            } else {
-                 addChatMessage("I couldn't find any actionable requirements in your request.", 'model');
-            }
-
-        } catch (error) {
-            console.error('Gemini API Error:', error);
-            addChatMessage(`Sorry, I couldn't process that. Error: ${error.message}`, 'model');
-            showToast('Gemini API request failed. Check the console for details.', 'error');
-        } finally {
-            checkGeminiReady();
-        }
-    };
-
-    // === EVENT LISTENERS ===
-    newProjectBtn.addEventListener('click', createNewProject);
-    createFirstProjectBtn.addEventListener('click', createNewProject);
-    projectSelector.addEventListener('change', (e) => { appData.activeProjectId = e.target.value; saveData(); renderBoard(); checkGeminiReady(); });
+    // UI UTILITIES
+    const applyTheme=()=>{document.documentElement.className=appData.theme;$('#theme-icon-light').classList.toggle('hidden',appData.theme==='dark');$('#theme-icon-dark').classList.toggle('hidden',appData.theme!=='dark')};
+    const showToast=(m,t='info')=>{const e=document.createElement('div'),c={info:'bg-blue-500',success:'bg-green-500',error:'bg-red-500'};e.className=`text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300 transform translate-x-full ${c[t]}`;e.textContent=m;$('#toast-container').appendChild(e);setTimeout(()=>e.classList.remove('translate-x-full'),100);setTimeout(()=>{e.classList.add('opacity-0');e.addEventListener('transitionend',()=>e.remove())},3000)};
+    const downloadFile=(c,f,t)=>{const u='data:'+t+';charset=utf-8,'+encodeURIComponent(c),a=document.createElement('a');a.href=u;a.download=f;a.click()};
     
-    // Search & Filter
-    searchInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(renderBoard, 300); });
-    filterPrioritySelect.addEventListener('change', renderBoard);
-    sortBySelect.addEventListener('change', renderBoard);
-
-    // Board Event Delegation for add buttons
-    board.addEventListener('click', e => {
-        const addBtn = e.target.closest('.add-card-btn');
-        if (addBtn) {
-            const column = addBtn.closest('.board-column');
-            const columnId = column.dataset.columnId;
-            const formContainer = column.querySelector('.inline-add-form-container');
-            addBtn.style.display = 'none'; // Hide the button
-            showInlineAddForm(columnId, formContainer);
-        }
-    });
-
-    // Modal Actions
-    [...document.querySelectorAll('#close-modal-btn, #cancel-btn, #modal-backdrop')].forEach(el => el.addEventListener('click', closeModal));
-    cardForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const cardId = $('#card-id').value, columnId = $('#card-column').value, now = new Date().toISOString();
-        const cardData = {
-            id: cardId || generateUUID(), title: $('#card-title').value.trim(), description: $('#card-description').value.trim(),
-            priority: $('#card-priority').value, dueDate: $('#card-due-date').value, owner: $('#card-owner').value.trim(),
-            tags: $('#card-tags').value.split(',').map(tag => tag.trim()).filter(Boolean), links: [], updatedAt: now,
-        };
-        const project = getActiveProject();
-        if (cardId) {
-            const cardIndex = project.columns[columnId].findIndex(c => c.id === cardId);
-            project.columns[columnId][cardIndex] = { ...project.columns[columnId][cardIndex], ...cardData };
-            showToast('Card updated!', 'success');
-        } else {
-            cardData.createdAt = now;
-            project.columns[columnId].push(cardData);
-            showToast('Card added!', 'success');
-        }
-        project.updatedAt = now;
-        saveData(); renderBoard(); closeModal();
-    });
-
-    deleteCardBtn.addEventListener('click', () => {
-        if (!confirm('Are you sure you want to delete this?')) return;
-        const cardId = $('#card-id').value, columnId = $('#card-column').value, project = getActiveProject();
-        project.columns[columnId] = project.columns[columnId].filter(c => c.id !== cardId);
-        project.updatedAt = new Date().toISOString();
-        saveData(); renderBoard(); closeModal(); showToast('Card deleted.', 'info');
-    });
-
-    themeToggleBtn.addEventListener('click', toggleTheme);
-    geminiForm.addEventListener('submit', handleGeminiSubmit);
-    saveApiKeyBtn.addEventListener('click', () => {
-        appData.geminiApiKey = geminiApiKeyInput.value;
-        saveData(); checkGeminiReady();
-        showToast('API Key saved!', 'success');
-    });
-
-    // Simple auto-resize for textarea
-    geminiInput.addEventListener('input', () => {
-        geminiInput.style.height = 'auto';
-        geminiInput.style.height = `${geminiInput.scrollHeight}px`;
-    });
+    // EVENT LISTENERS
+    $('#new-project-btn').addEventListener('click',createNewProject);createFirstProjectBtn.addEventListener('click',createNewProject);
+    projectSelector.addEventListener('change',e=>{appData.activeProjectId=e.target.value;saveData();renderBoard()});
+    searchInput.addEventListener('input',()=>{clearTimeout(debounceTimer);debounceTimer=setTimeout(renderBoard,300)});
+    filterPrioritySelect.addEventListener('change',renderBoard);sortBySelect.addEventListener('change',renderBoard);
+    board.addEventListener('click',e=>{const b=e.target.closest('.add-card-btn');if(b){const c=b.closest('.board-column');showInlineAddForm(c.dataset.columnId,c.querySelector('.inline-add-form-container'));b.style.display='none'}});
+    board.addEventListener('click',e=>{if(e.target.matches('.save-inline-add')){const c=e.target.closest('.inline-add-form-container');const t=c.querySelector('textarea').value.trim();const d=e.target.closest('.board-column').dataset.columnId;if(t){const n=new Date().toISOString();const o={id:generateUUID(),title:t,description:'',priority:'Medium',dueDate:'',owner:'',tags:[],links:[],createdAt:n,updatedAt:n};getActiveProject().columns[d].push(o);getActiveProject().updatedAt=n;saveData();showToast('Card added!','success');renderBoard()}}});
+    board.addEventListener('click',e=>{if(e.target.matches('.cancel-inline-add'))renderBoard()});
+    board.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey&&e.target.matches('.inline-add-form-container textarea')){const c=e.target.closest('.inline-add-form-container').querySelector('.save-inline-add');if(c)c.click()}});
     
-    // Import/Export Listeners... (removed from shortened code, functionality assumed from previous version and still works)
+    $$('#close-modal-btn,#cancel-btn,#modal-backdrop').forEach(b=>b.addEventListener('click',closeModal));
+    cardForm.addEventListener('submit',e=>{e.preventDefault();const i=$('#card-id').value,c=$('#card-column').value,n=new Date().toISOString();const d={id:i||generateUUID(),title:$('#card-title').value.trim(),description:$('#card-description').value.trim(),priority:$('#card-priority').value,dueDate:$('#card-due-date').value,owner:$('#card-owner').value.trim(),tags:$('#card-tags').value.split(',').map(t=>t.trim()).filter(Boolean),updatedAt:n};const p=getActiveProject();if(i){const x=p.columns[c].findIndex(e=>e.id===i);p.columns[c][x]={...p.columns[c][x],...d};showToast('Card updated!','success')}else{d.createdAt=n;p.columns[c].push(d);showToast('Card added!','success')}p.updatedAt=n;saveData();renderBoard();closeModal()});
+    $('#delete-card-btn').addEventListener('click',()=>{if(!confirm('Are you sure?'))return;const i=$('#card-id').value,c=$('#card-column').value,p=getActiveProject();p.columns[c]=p.columns[c].filter(e=>e.id!==i);p.updatedAt=new Date().toISOString();saveData();renderBoard();closeModal();showToast('Card deleted.','info')});
+    
+    themeToggleBtn.addEventListener('click',()=>{appData.theme=appData.theme==='dark'?'light':'dark';applyTheme();saveData()});
+    geminiToggleBtn.addEventListener('click',()=>{appData.geminiChatVisible=!appData.geminiChatVisible;updateGeminiUI();saveData()});
+    saveApiKeyBtn.addEventListener('click',()=>{appData.geminiApiKey=geminiApiKeyInput.value;saveData();updateGeminiUI();if(appData.geminiApiKey)showToast('API Key saved!','success')});
+    geminiForm.addEventListener('submit',handleGeminiSubmit);
+    geminiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();geminiForm.requestSubmit()}});
+    geminiInput.addEventListener('input',()=>{geminiInput.style.height='auto';geminiInput.style.height=`${geminiInput.scrollHeight}px`});
+    
+    // ** RESTORED IMPORT/EXPORT **
+    exportJsonBtn.addEventListener('click',()=>{const p=getActiveProject();if(!p){showToast('No project selected.','error');return}downloadFile(JSON.stringify(p,null,2),`${p.name.replace(/\s+/g,'_')}.json`,'application/json')});
+    exportTxtBtn.addEventListener('click',()=>{const p=getActiveProject();if(!p){showToast('No project selected.','error');return}let c=`Project: ${p.name}\nExported: ${new Date().toLocaleString()}\n========================\n\n`;Object.entries(p.columns).forEach(([id,cards])=>{c+=`--- ${columnConfig[id].title.toUpperCase()} (${cards.length}) ---\n\n`;if(cards.length===0)c+="No cards.\n\n";else cards.forEach(card=>{c+=`[${card.priority}] ${card.title}\n`;if(card.owner)c+=`  Owner: ${card.owner}\n`;if(card.dueDate)c+=`  Due: ${card.dueDate}\n`;if(card.tags&&card.tags.length>0)c+=`  Tags: ${card.tags.join(', ')}\n`;c+='---\n'});c+='\n'});downloadFile(c,`${p.name.replace(/\s+/g,'_')}_report.txt`,'text/plain')});
+    importBtn.addEventListener('click',()=>importFileInput.click());
+    importFileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(!d.id||!d.name||!d.columns)throw new Error("Invalid file format.");const x=appData.projects.findIndex(p=>p.id===d.id);if(x!==-1){if(confirm(`Project "${d.name}" exists. Overwrite?`)){appData.projects[x]=d}else{d.id=generateUUID();d.name=`${d.name} (Imported)`;appData.projects.push(d)}}else{appData.projects.push(d)}appData.activeProjectId=d.id;saveData();renderApp();showToast('Project imported!','success')}catch(err){showToast(`Import failed: ${err.message}`,'error')}finally{importFileInput.value=''}};r.readAsText(f)});
 
-    // === INITIALIZATION ===
+    // INITIALIZATION
     loadData();
     renderApp();
 });
