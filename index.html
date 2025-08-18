@@ -46,10 +46,19 @@
         }
         
         /* === MISC & UI POLISH === */
-        .col-agreed { background-image: linear-gradient(to top, rgba(16, 185, 129, 0.1), transparent); }
-        .col-disagreed { background-image: linear-gradient(to top, rgba(239, 68, 68, 0.1), transparent); }
-        .col-on-hold { background-image: linear-gradient(to top, rgba(245, 158, 11, 0.1), transparent); }
-        .col-unneeded { background-image: linear-gradient(to top, rgba(107, 114, 128, 0.1), transparent); }
+        .col-initial { background-image: linear-gradient(to top, rgba(28, 128, 118, 0.1), transparent); }
+        .col-agreed { background-image: linear-gradient(to top, rgba(28, 128, 65, 0.1), transparent); }
+        .col-unachievable { background-image: linear-gradient(to top, rgba(28, 71, 128, 0.1), transparent); }
+        .col-on-hold { background-image: linear-gradient(to top, rgba(110, 19, 69, 0.1), transparent); }
+        
+        /* Column Header & Badge Colors */
+        .col-initial h2 { color: #1c8076; }
+        .col-agreed h2 { color: #1c8041; }
+        .col-unachievable h2 { color: #1c4780; }
+        .col-on-hold h2 { color: #6e1345; }
+
+        .dark .col-initial h2, .dark .col-agreed h2, .dark .col-unachievable h2, .dark .col-on-hold h2 { filter: brightness(1.6); }
+        
         .dragging { opacity: 0.5; transform: rotate(2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.3); cursor: grabbing; }
         .drag-over { border-style: dashed; }
         .priority-critical { background-color: #ef4444; color: white; } .priority-high { background-color: #f97316; color: white; }
@@ -102,7 +111,7 @@
                  <p class="text-xs mt-1">Key is stored only in your browser's localStorage.</p>
             </div>
             <div id="chat-ui-container" class="hidden">
-                 <div id="chat-container" class="h-64 overflow-y-auto bg-black/10 dark:bg-black/20 rounded-lg p-4 mb-4 flex flex-col gap-4"><div class="chat-bubble chat-bubble-model">Hello! Describe requirements and I'll create them as cards with smart tags in the 'Agreed' column.</div></div>
+                 <div id="chat-container" class="h-64 overflow-y-auto bg-black/10 dark:bg-black/20 rounded-lg p-4 mb-4 flex flex-col gap-4"><div class="chat-bubble chat-bubble-model">Hello! Describe requirements and I'll create them as cards with smart tags in the 'Initial' column.</div></div>
                 <form id="chat-form" class="flex gap-2 items-start">
                     <textarea id="chat-input" rows="1" placeholder="Press Enter to send..." class="flex-grow rounded-md border-gray-300 resize-none p-2"></textarea>
                     <button type="submit" id="chat-submit-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold p-3 rounded-md disabled:bg-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
@@ -146,7 +155,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let appData = { projects: [], activeProjectId: null, theme: 'light', apiKey: null, chatVisible: false };
     let draggedItem = null;
     
-    const columnConfig = { agreed: { title: "Agreed Requirements", color: "green" }, disagreed: { title: "Disagreed Requirements", color: "red" }, onHold: { title: "On-Hold Requirements", color: "amber" }, unneeded: { title: "Unneeded Requirements", color: "gray" },};
+    const columnConfig = { 
+        initial: { title: "Initial" }, 
+        agreed: { title: "Agreed" }, 
+        unachievable: { title: "Unachievable" }, 
+        onHold: { title: "On-Hold" }
+    };
     const priorityOrder = { Critical: 4, High: 3, Medium: 2, Low: 1 };
     
     // === DATA MANAGEMENT ===
@@ -173,9 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const columnEl = document.createElement('section');
             columnEl.id = columnId; columnEl.className = `board-column col-${columnId} p-4 rounded-xl bg-white/30 dark:bg-slate-800/50 flex flex-col border-2 border-transparent`; columnEl.dataset.columnId = columnId;
             const cards = getFilteredAndSortedCards(project.columns[columnId] || []);
-            columnEl.innerHTML = `<h2 class="text-lg font-bold mb-4 text-${columnMeta.color}-700 dark:text-${columnMeta.color}-300 flex items-center justify-between"><span>${columnMeta.title}</span><span class="text-sm font-normal bg-${columnMeta.color}-200 dark:bg-${columnMeta.color}-900/80 px-2 py-1 rounded-full">${cards.length}</span></h2><div class="card-container flex-grow space-y-4 overflow-y-auto pr-2 min-h-[200px]"></div><div class="inline-add-form-container mt-2"></div><button class="add-card-btn mt-4 w-full bg-white/40 dark:bg-slate-700/50 hover:bg-white/60 dark:hover:bg-slate-700 font-semibold p-2 rounded-md transition-all flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Add Card</button>`;
+            columnEl.innerHTML = `<h2 class="text-lg font-bold mb-4 flex items-center justify-between"><span>${columnMeta.title}</span><span class="text-sm font-normal text-white/80 px-2 py-1 rounded-full">${cards.length}</span></h2><div class="card-container flex-grow space-y-4 overflow-y-auto pr-2 min-h-[200px]"></div><div class="inline-add-form-container mt-2"></div><button class="add-card-btn mt-4 w-full bg-white/40 dark:bg-slate-700/50 hover:bg-white/60 dark:hover:bg-slate-700 font-semibold p-2 rounded-md transition-all flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Add Card</button>`;
             const cardContainer = columnEl.querySelector('.card-container');
-            if(cards.length === 0) cardContainer.innerHTML = '<p class="text-sm text-center mt-8">No cards here.</p>';
+            if(cards.length === 0) cardContainer.innerHTML = '<p class="text-sm text-center text-slate-500 dark:text-slate-400 mt-8">No cards here.</p>';
             else cards.forEach(card => cardContainer.appendChild(createCardElement(card)));
 
             const footer = document.createElement('div'); footer.className = 'text-center text-xs p-2 mt-auto border-t border-slate-300/50 dark:border-slate-700/50 font-semibold'; footer.textContent = columnMeta.title; columnEl.appendChild(footer);
@@ -192,7 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let tagsHtml = '';
         if (card.tags && card.tags.length > 0) {
             const tagsToShow = card.tags.slice(0, 3); const hiddenTagsCount = card.tags.length - 3;
-            tagsHtml = tagsToShow.map(tag => `<span class="bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-blue-100 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${tag}</span>`).join('');
+            // FIX: Using better colors for dark mode readability
+            tagsHtml = tagsToShow.map(tag => `<span class="bg-blue-200 dark:bg-sky-900 text-blue-800 dark:text-sky-200 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${tag}</span>`).join('');
             if (hiddenTagsCount > 0) { tagsHtml += `<span class="text-xs ml-1 tag-more">+${hiddenTagsCount} more</span>`; }
         }
 
@@ -201,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     // === PROJECT & CARD MANAGEMENT ===
-    const createNewProject = () => { const n = prompt("Enter the new project name:"); if(n&&n.trim()){const t=new Date().toISOString(), i=generateUUID(); appData.projects.push({id:i, name: n.trim(), createdAt: t, updatedAt:t, columns: {agreed:[], disagreed:[], onHold:[], unneeded:[]}}); appData.activeProjectId=i; saveData(); renderApp(); showToast(`Project "${n}" created!`, "success");} else if(n!==null)showToast("Project name cannot be empty.", "error");};
+    const createNewProject = () => { const n = prompt("Enter the new project name:"); if(n&&n.trim()){const t=new Date().toISOString(), i=generateUUID(); appData.projects.push({id:i, name: n.trim(), createdAt: t, updatedAt:t, columns: {initial:[], agreed:[], unachievable:[], onHold:[]}}); appData.activeProjectId=i; saveData(); renderApp(); showToast(`Project "${n}" created!`, "success");} else if(n!==null)showToast("Project name cannot be empty.", "error");};
     const deleteCurrentProject = () => { const p = getActiveProject(); if(!p)return; if(confirm(`Are you sure you want to permanently delete project "${p.name}"? This cannot be undone.`)){ appData.projects=appData.projects.filter(proj=>proj.id!==p.id); appData.activeProjectId = appData.projects.length>0 ? appData.projects[0].id : null; saveData(); renderApp(); showToast(`Project "${p.name}" deleted.`, "info");}};
     const populateProjectSelector=()=>{ projectSelector.innerHTML=appData.projects.map(p=>`<option value="${p.id}" ${p.id===appData.activeProjectId?'selected':''}>${p.name}</option>`).join(''); };
     
@@ -211,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === CHAT / AI ===
     const updateChatUI=()=>{const p=appData.projects.length>0;chatSection.classList.toggle('hidden', !appData.chatVisible||!p); const k=!!appData.apiKey;apiKeyContainer.classList.toggle('hidden', k); chatUiContainer.classList.toggle('hidden',!k); apiKeyInput.value = appData.apiKey || ''; if(k) $('#chat-submit-btn').disabled=false;};
     const addChatMessage=(m,s)=>{const b=document.createElement('div'); b.className=`chat-bubble p-3 rounded-lg chat-bubble-${s} text-sm`; b.textContent=m; $('#chat-container').appendChild(b); $('#chat-container').scrollTop=$('#chat-container').scrollHeight;};
-    const handleChatSubmit=async e=>{e.preventDefault(); const i=$('#chat-input').value.trim(); if(!i)return; addChatMessage(i, 'user'); $('#chat-input').value=''; $('#chat-submit-btn').disabled=true; const p=`You are a requirements assistant. Analyze the user's text and extract actionable requirements. For each requirement, generate a JSON object with 'title', 'description', 'priority' (Low, Medium, High, or Critical), and 'tags' (an array of 1-3 relevant string keywords). Return a raw JSON array of these objects without any markdown, comments, or explanations.`; try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${appData.apiKey}`, {method:'POST',headers:{'Content-Type':'application/json'}, body:JSON.stringify({contents:[{parts:[{text:`${p}\n\nUser text: "${i}"`}]}]})}); if(!r.ok)throw new Error(`API error: ${r.statusText} - Check API key and billing.`); const d=await r.json(); const t=d.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g,'').trim(); const q=JSON.parse(t); const o=getActiveProject();let a=0; const n=new Date().toISOString(); (Array.isArray(q)?q:[q]).forEach(req=>{if(req.title){o.columns.agreed.push({id:generateUUID(), title:req.title, description:req.description||'', priority:['Low','Medium','High','Critical'].includes(req.priority)?req.priority:'Medium', tags:Array.isArray(req.tags)?req.tags:[], dueDate:'', owner:'', links:[], createdAt:n, updatedAt:n});a++}}); if(a>0){addChatMessage(`I've added ${a} requirement(s).`, 'model'); o.updatedAt=n; saveData(); showToast(`${a} cards created by AI`, 'success'); renderBoard();}else{addChatMessage("I couldn't find any actionable requirements.", 'model');}}catch(err){addChatMessage(`Sorry, I couldn't process that: ${err.message}`, 'model'); showToast('Chat API request failed.', 'error');}finally{$('#chat-submit-btn').disabled=false}};
+    const handleChatSubmit=async e=>{e.preventDefault(); const i=$('#chat-input').value.trim(); if(!i)return; addChatMessage(i, 'user'); $('#chat-input').value=''; $('#chat-submit-btn').disabled=true; const p=`You are a requirements assistant. Analyze the user's text and extract actionable requirements. For each requirement, generate a JSON object with 'title', 'description', 'priority' (Low, Medium, High, or Critical), and 'tags' (an array of 1-3 relevant string keywords). Return a raw JSON array of these objects without any markdown, comments, or explanations.`; try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${appData.apiKey}`, {method:'POST',headers:{'Content-Type':'application/json'}, body:JSON.stringify({contents:[{parts:[{text:`${p}\n\nUser text: "${i}"`}]}]})}); if(!r.ok)throw new Error(`API error: ${r.statusText} - Check API key and billing.`); const d=await r.json(); const t=d.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g,'').trim(); const q=JSON.parse(t); const o=getActiveProject();let a=0; const n=new Date().toISOString(); (Array.isArray(q)?q:[q]).forEach(req=>{if(req.title){o.columns.initial.push({id:generateUUID(), title:req.title, description:req.description||'', priority:['Low','Medium','High','Critical'].includes(req.priority)?req.priority:'Medium', tags:Array.isArray(req.tags)?req.tags:[], dueDate:'', owner:'', links:[], createdAt:n, updatedAt:n});a++}}); if(a>0){addChatMessage(`I've added ${a} requirement(s) to the 'Initial' column.`, 'model'); o.updatedAt=n; saveData(); showToast(`${a} cards created by AI`, 'success'); renderBoard();}else{addChatMessage("I couldn't find any actionable requirements.", 'model');}}catch(err){addChatMessage(`Sorry, I couldn't process that: ${err.message}`, 'model'); showToast('Chat API request failed.', 'error');}finally{$('#chat-submit-btn').disabled=false}};
 
     // === UI & EVENT LISTENERS ===
     const getFilteredAndSortedCards = (cards) => { let c = cards.filter(card => { const s = $('#search-input').value.toLowerCase(), p = $('#filter-priority').value; return (s===''||card.title.toLowerCase().includes(s)||(card.description||'').toLowerCase().includes(s)||(card.owner||'').toLowerCase().includes(s)||(card.tags||[]).some(t=>t.toLowerCase().includes(s))) && (p===''||card.priority===p) }); if ($('#sort-by').value === 'priority') c.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]); else if ($('#sort-by').value === 'dueDate') c.sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate)); return c; };
@@ -236,9 +251,70 @@ document.addEventListener('DOMContentLoaded', () => {
     chatForm.addEventListener('submit', handleChatSubmit); chatInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();chatForm.requestSubmit();}});
     exportAllBtn.addEventListener('click',()=>{if(!appData.projects||appData.projects.length===0)return showToast('No projects to export.','error');downloadFile(JSON.stringify(appData,null,2),`requirements_board_backup_${new Date().toISOString().slice(0,10)}.json`,'application/json')});
     importBtn.addEventListener('click', ()=>importFileInput.click());
-    importFileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);let p=[];if(d.projects&&Array.isArray(d.projects)){p=d.projects;appData.theme=d.theme||appData.theme;appData.apiKey=d.apiKey||appData.apiKey;}else if(d.id&&d.columns){p.push(d);}else{throw new Error("Unrecognized file format.")}let i=0,u=0;p.forEach(proj=>{const x=appData.projects.findIndex(p=>p.id===proj.id);if(x!==-1){if(confirm(`Project "${proj.name}" exists. Overwrite?`)){appData.projects[x]=proj;u++;}}else{appData.projects.push(proj);i++;}});if(p.length>0&&(!getActiveProject() || !appData.projects.some(proj=>proj.id===appData.activeProjectId)))appData.activeProjectId=p[p.length-1].id;saveData();renderApp();showToast(`Import: ${i} new, ${u} updated.`,'success')}catch(err){showToast(`Import failed: ${err.message}`,'error')}finally{importFileInput.value=''}};r.readAsText(f)});
+    importFileInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                const projectsToImport = [];
+                if (data.projects && Array.isArray(data.projects)) { // Full backup file
+                    projectsToImport.push(...data.projects);
+                    appData.theme = data.theme || appData.theme;
+                    appData.apiKey = data.apiKey || appData.apiKey;
+                } else if (data.id && data.columns) { // Single project file
+                    projectsToImport.push(data);
+                } else {
+                    throw new Error("Unrecognized file format.");
+                }
+
+                let importedCount = 0, updatedCount = 0;
+                let migrationOccurred = false;
+
+                projectsToImport.forEach(proj => {
+                    // FIX: Migration logic for old project structures
+                    if (proj.columns && (proj.columns.hasOwnProperty('disagreed') || proj.columns.hasOwnProperty('unneeded'))) {
+                        const migratedColumns = {
+                            initial: proj.columns.agreed || [],
+                            agreed: proj.columns.disagreed || [],
+                            unachievable: proj.columns.onHold || [],
+                            onHold: proj.columns.unneeded || []
+                        };
+                        proj.columns = migratedColumns;
+                        migrationOccurred = true;
+                    }
+
+                    const existingIndex = appData.projects.findIndex(p => p.id === proj.id);
+                    if (existingIndex !== -1) {
+                        if (confirm(`Project "${proj.name}" exists. Overwrite?`)) {
+                            appData.projects[existingIndex] = proj;
+                            updatedCount++;
+                        }
+                    } else {
+                        appData.projects.push(proj);
+                        importedCount++;
+                    }
+                });
+                
+                if (migrationOccurred) showToast(`Imported and migrated old project structure.`, 'info');
+                if (projectsToImport.length > 0 && !appData.projects.some(p => p.id === appData.activeProjectId)) {
+                    appData.activeProjectId = projectsToImport[projectsToImport.length - 1].id;
+                }
+
+                saveData();
+                renderApp();
+                showToast(`Import successful: ${importedCount} new, ${updatedCount} updated.`, 'success');
+            } catch (err) {
+                showToast(`Import failed: ${err.message}`, 'error');
+            } finally {
+                importFileInput.value = ''; // Reset file input
+            }
+        };
+        reader.readAsText(file);
+    });
     $('#export-json-btn').addEventListener('click',()=>{const p=getActiveProject();if(!p)return showToast('No project selected.','error');downloadFile(JSON.stringify(p,null,2),`${p.name.replace(/\s+/g,'_')}.json`,'application/json')});
-    $('#export-txt-btn').addEventListener('click', () => { const p = getActiveProject(); if (!p) return showToast('No project selected.', 'error'); let c = `Project: ${p.name}\nExported: ${new Date().toLocaleString()}\n========================\n\n`; Object.entries(p.columns).forEach(([id, cards]) => { c += `--- ${columnConfig[id].title.toUpperCase()} (${(cards || []).length}) ---\n\n`; if ((cards || []).length === 0) { c += "No cards in this section.\n\n"; } else { (cards || []).forEach(card => { c += `[${card.priority}] ${card.title}\n`; if (card.description) c += `  Description: ${card.description.replace(/\n/g, '\n               ')}\n`; if (card.owner) c += `  Owner: ${card.owner}\n`; if (card.dueDate) c += `  Due: ${card.dueDate}\n`; if (card.tags && card.tags.length > 0) c += `  Tags: ${card.tags.join(', ')}\n`; if (card.createdAt) c += `  Created: ${new Date(card.createdAt).toLocaleString()}\n`; if (card.updatedAt && card.updatedAt !== card.createdAt) c += `  Updated: ${new Date(card.updatedAt).toLocaleString()}\n`; c += `---\n\n`; }); } }); downloadFile(c, `${p.name.replace(/\s+/g, '_')}_report.txt`, 'text/plain'); });
+    $('#export-txt-btn').addEventListener('click', () => { const p = getActiveProject(); if (!p) return showToast('No project selected.', 'error'); let c = `Project: ${p.name}\nExported: ${new Date().toLocaleString()}\n========================\n\n`; Object.entries(p.columns).forEach(([id, cards]) => { const columnMeta = columnConfig[id]; if(!columnMeta) return; c += `--- ${columnMeta.title.toUpperCase()} (${(cards || []).length}) ---\n\n`; if ((cards || []).length === 0) { c += "No cards in this section.\n\n"; } else { (cards || []).forEach(card => { c += `[${card.priority}] ${card.title}\n`; if (card.description) c += `  Description: ${card.description.replace(/\n/g, '\n               ')}\n`; if (card.owner) c += `  Owner: ${card.owner}\n`; if (card.dueDate) c += `  Due: ${card.dueDate}\n`; if (card.tags && card.tags.length > 0) c += `  Tags: ${card.tags.join(', ')}\n`; if (card.createdAt) c += `  Created: ${new Date(card.createdAt).toLocaleString()}\n`; if (card.updatedAt && card.updatedAt !== card.createdAt) c += `  Updated: ${new Date(card.updatedAt).toLocaleString()}\n`; c += `---\n\n`; }); } }); downloadFile(c, `${p.name.replace(/\s+/g, '_')}_report.txt`, 'text/plain'); });
     
     // === INITIALIZATION ===
     loadData();
